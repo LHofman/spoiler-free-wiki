@@ -1,5 +1,5 @@
-import PageDTO from '../../Application/Port/DTO/PageDTO';
+import PageAggregate from '../Aggregate/PageAggregate';
 
 export default interface PageRepository {
-  findById(id: string, season?: number, episode?: number): Promise<PageDTO>;
+  findById(id: string): Promise<PageAggregate>;
 }

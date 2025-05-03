@@ -14,12 +14,9 @@ interface GetByIdparams extends ProgressParams {
 router.get('/:id{/:season}{/:episode}', async (req: Request<GetByIdparams>, res: Response) => {
   try {
     const pageRepository: PageRepository = new MongoosePageRepository();
-    const page = await pageRepository.findById(
-      req.params.id,
-      Number(req.params.season),
-      Number(req.params.episode)
-    );
-    res.json(page);
+    const pageAggregate = await pageRepository.findById(req.params.id);
+    const pageDTO = pageAggregate.toDTO(Number(req.params.season), Number(req.params.episode));
+    res.json(pageDTO);
   } catch (error) {
     res.status(400).json({ error });
   }
