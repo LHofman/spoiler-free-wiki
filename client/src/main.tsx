@@ -1,14 +1,32 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { Provider } from 'react-redux'
-import { store } from './store/store.ts'
+import { MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import './index.css';
+import './App.css';
+import { routeTree } from './routeTree.gen';
+import { store } from './store/store.ts';
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-)
+
+const router = createRouter({ routeTree });
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router,
+  }
+};
+
+const rootElement = document.getElementById('root')!;
+if (!rootElement.innerHTML) {
+  const root = createRoot(rootElement)
+  root.render(
+    <StrictMode>
+      <Provider store={store}>
+        <MantineProvider defaultColorScheme="dark">
+          <RouterProvider router={router} />
+        </MantineProvider>
+      </Provider>
+    </StrictMode>,
+  );
+}

@@ -1,4 +1,3 @@
-import PageDTO from '../../../Application/Port/DTO/PageDTO';
 import PageAggregate from '../../../Domain/Aggregate/PageAggregate';
 import DocumentNotFoundError from '../../../Domain/Error/DocumentNotFoundError';
 import PageRepository from '../../../Domain/Repository/PageRepository';
@@ -9,7 +8,7 @@ import { ITextItemSchemaDoc } from '../Model/TextItemSchema';
 import MongooseRepository from './MongooseRepository';
 
 export default class MongoosePageRepository extends MongooseRepository<IPageDoc> implements PageRepository {
-  public findById = async (id: string): Promise<PageAggregate> => {
+  findById = async (id: string): Promise<PageAggregate> => {
     const pageId = this.toObjectId(id);
     const page = await Page.findById(pageId);
     if (!page) {
@@ -31,6 +30,16 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
         )
       })
     );
+  }
+
+  findRawById = async (id: string): Promise<IPageDoc> => {
+    const pageId = this.toObjectId(id);
+    const page = await Page.findById(pageId);
+    if (!page) {
+      throw new DocumentNotFoundError('Page');
+    }
+
+    return page;
   }
 
   // Temporary to update page via postman, easier than doing it in atlas
