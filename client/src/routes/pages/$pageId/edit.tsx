@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import EditPage from '../../../components/Page/EditPage';
+import EditPage from '../../../components/Page/EditPage/EditPage';
 
 export const Route = createFileRoute('/pages/$pageId/edit')({
   component: RouteComponent,

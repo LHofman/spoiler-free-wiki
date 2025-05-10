@@ -2,7 +2,7 @@ import { Button, Modal } from '@mantine/core';
 import { Link } from '@tanstack/react-router';
 import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
-import PageForm from './Page/TextItem/PageForm';
+import PageForm from './Page/EditPage/PageForm';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTrash } from '@tabler/icons-react';
 import ConfirmationModel from './ConfirmationModel';

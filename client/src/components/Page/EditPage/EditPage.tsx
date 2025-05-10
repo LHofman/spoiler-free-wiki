@@ -4,9 +4,10 @@ import { IconEdit } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import EditPageTextItems from './TextItem/EditPageTextItems';
-import PageForm from './TextItem/PageForm';
-import { Page, TextItem } from '../../types/PageTypes';
+import EditPageTextItems from './EditPageTextItems';
+import PageForm from './PageForm';
+import { Page, Property, TextItem } from '../../../types/PageTypes';
+import EditProperties from './Properties/EditProperties';
 
 interface EditPage {
   title: string;
@@ -73,6 +74,29 @@ function EditPage(props: EditPageProps) {
     updatePage(updatedPage);
   }
 
+  const handleAddEditProperty = (propertyIndex: number, property: Property) => {
+    const updatedPage = Object.assign({}, page);
+    if (propertyIndex === -1) {
+      updatedPage.properties.push(property);
+    } else {
+      updatedPage.properties[propertyIndex] = property;
+    }
+
+    updatePage(updatedPage);
+  };
+
+  const handleDeleteProperty = (propertyIndex: number) => {
+    if (page?.properties[propertyIndex].value.length ?? 0 > 0) {
+      alert('Cannot delete a property that has text');
+      return;
+    }
+
+    const updatedPage = Object.assign({}, page);
+    updatedPage.properties.splice(propertyIndex, 1);
+    
+    updatePage(updatedPage);
+  }
+
   const updatePage = async (updatedPage: Page): Promise<void> => {
     try {
       const response = await axios.put(
@@ -98,6 +122,7 @@ function EditPage(props: EditPageProps) {
       </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
       <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
+      <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
     </>
   );
 }
