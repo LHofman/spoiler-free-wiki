@@ -1,7 +1,11 @@
+import { Modal } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IconEdit } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import EditPageTextItems from './TextItem/EditPageTextItems';
+import PageForm from './TextItem/PageForm';
 
 interface TextItem {
   text: string;
@@ -13,6 +17,9 @@ interface Page {
   title: string;
   text: TextItem[][];
 }
+interface EditPage {
+  title: string;
+}
 
 interface EditPageProps {
   pageId: string;
@@ -20,6 +27,8 @@ interface EditPageProps {
 
 function EditPage(props: EditPageProps) {
   const [page, setPage] = useState<Page|null>(null);
+  const [isModelOpen, { open: openModel, close }] = useDisclosure(false);
+  const [editModelInitialValues, setEditModelInitialValues] = useState<Page|undefined>(undefined);
   
   useEffect(() => {
     const fetchPage = async () => {
@@ -35,6 +44,18 @@ function EditPage(props: EditPageProps) {
     };
     fetchPage();
   }, [props.pageId]);
+
+  const openEditModel = () => {
+    setEditModelInitialValues(page ?? undefined);
+    openModel();
+  }
+
+  const handleEditPage = (values: EditPage) => {
+    const updatedPage = Object.assign({}, page, values);
+    updatePage(updatedPage);
+
+    close();
+  };
 
   const handleAddEditTextItem = (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) => {
     const updatedPage = Object.assign({}, page);
@@ -77,7 +98,13 @@ function EditPage(props: EditPageProps) {
 
   return page && (
     <>
-      <h1>{ page.title }</h1>
+      <Modal opened={isModelOpen} onClose={close} title='Edit' centered>
+        <PageForm initialValues={editModelInitialValues} handleSubmit={handleEditPage} />
+      </Modal>
+      <h1>
+        { page.title }
+        <IconEdit color='orange' onClick={openEditModel} />
+      </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
       <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
     </>
