@@ -1,5 +1,5 @@
 export interface PageDetails {
-  id: string;
+  _id: string;
   title: string;
   text: string[];
 }

@@ -30,7 +30,7 @@ function PageDetailsComponent(props: PageDetailsProps) {
   return page && (
     <>
       <h1>{ page.title }</h1>
-      <Link to={`/pages/$pageId/edit`} params={{ pageId: page.id }}>Edit</Link>
+      <Link to={`/pages/$pageId/edit`} params={{ pageId: page._id }}>Edit</Link>
       { page.text.map((textLine, idx) => <p key={idx}>{ textLine }</p>) }
     </>
   );

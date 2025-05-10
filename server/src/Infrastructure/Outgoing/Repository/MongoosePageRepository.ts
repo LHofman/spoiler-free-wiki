@@ -1,3 +1,4 @@
+import PageList from '../../../Application/Port/DTO/PageList';
 import PageAggregate from '../../../Domain/Aggregate/PageAggregate';
 import DocumentNotFoundError from '../../../Domain/Error/DocumentNotFoundError';
 import PageRepository from '../../../Domain/Repository/PageRepository';
@@ -8,6 +9,12 @@ import { ITextItemSchemaDoc } from '../Model/TextItemSchema';
 import MongooseRepository from './MongooseRepository';
 
 export default class MongoosePageRepository extends MongooseRepository<IPageDoc> implements PageRepository {
+  getList = async (): Promise<PageList> => {
+    const pages = await Page.find();
+
+    return pages.map((page: IPageDoc) => ({ _id: page._id, title: page.title }));
+  }
+
   findById = async (id: string): Promise<PageAggregate> => {
     const pageId = this.toObjectId(id);
     const page = await Page.findById(pageId);
@@ -42,8 +49,16 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     return page;
   }
 
-  // Temporary to update page via postman, easier than doing it in atlas
-  update = async (id: string, body: any) => {
+  add = async (body: { title: string }): Promise<IPageDoc> => {
+    const newPage = await Page.insertOne(body);
+    return newPage;
+  }
+
+  update = async (id: string, body: IPageDoc): Promise<void> => {
     await Page.findByIdAndUpdate(id, body);
+  }
+
+  delete = async (id: string): Promise<void> => {
+    await Page.findByIdAndDelete(id);
   }
 }

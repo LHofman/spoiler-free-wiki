@@ -4,6 +4,16 @@ import MongoosePageRepository from '../../Outgoing/Repository/MongoosePageReposi
 
 const router = express.Router();
 
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const pageRepository: PageRepository = new MongoosePageRepository();
+    const pagesList = await pageRepository.getList();
+    res.json(pagesList);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 router.get('/raw/:id', async (req: Request<{ id: string }>, res: Response) => {
   try {
     const pageRepository: PageRepository = new MongoosePageRepository();
@@ -37,12 +47,30 @@ router.get('/:id{/:season}{/:episode}', async (req: Request<GetByIdparams>, res:
   }
 });
 
-// Temporary to update page via postman, easier than doing it in atlas
+router.post('/', async (req: Request<{ title: string }>, res: Response) => {
+  try {
+    const pageRepository = new MongoosePageRepository();
+    const newPage = await pageRepository.add(req.body);
+    res.json(newPage);
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
 router.put('/:id', async (req: Request<{ id: string }>, res: Response) => {
-  console.log('hi');
   try {
     const pageRepository = new MongoosePageRepository();
     await pageRepository.update(req.params.id, req.body);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error });
+  }
+});
+
+router.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const pageRepository = new MongoosePageRepository();
+    await pageRepository.delete(req.params.id);
     res.json({ success: true });
   } catch (error) {
     res.status(400).json({ error });
