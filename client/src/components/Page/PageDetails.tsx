@@ -32,6 +32,11 @@ function PageDetailsComponent(props: PageDetailsProps) {
       <h1>{ page.title }</h1>
       <Link to={`/pages/$pageId/edit`} params={{ pageId: page._id }}>Edit</Link>
       { page.text.map((textLine, idx) => <p key={idx}>{ textLine }</p>) }
+      <br /><br />
+      <h2>Properties</h2>
+      { (page.properties ?? []).map((property) => (
+        <p><b>{ property.property }</b>: { property.value }</p>
+      )) }
     </>
   );
 }

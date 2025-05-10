@@ -2,6 +2,10 @@ export interface PageDetails {
   _id: string;
   title: string;
   text: string[];
+  properties: {
+    property: string;
+    value: string;
+  }[];
 }
 
 export interface Page {

@@ -2,6 +2,7 @@ import PageList from '../../../Application/Port/DTO/PageList';
 import PageAggregate from '../../../Domain/Aggregate/PageAggregate';
 import DocumentNotFoundError from '../../../Domain/Error/DocumentNotFoundError';
 import PageRepository from '../../../Domain/Repository/PageRepository';
+import PageProperty from '../../../Domain/ValueObject/PageProperty';
 import TextItem from '../../../Domain/ValueObject/TextItem';
 import TextItemVersions from '../../../Domain/ValueObject/TextItemVersions';
 import Page, { IPageDoc } from '../Model/Page';
@@ -25,19 +26,21 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     return new PageAggregate(
       page.id,
       page.title,
-      page.text.map((textItemVersions: ITextItemSchemaDoc[]) => {
-        return new TextItemVersions(
-          textItemVersions.map((textItemVersion: ITextItemSchemaDoc) => {
-            return new TextItem(
-              textItemVersion.text,
-              textItemVersion.season,
-              textItemVersion.episode,
-            )
-          }),
-        )
-      })
+      page.text.map(
+        (textItemVersions: ITextItemSchemaDoc[]) => this.mapTextItemVersionsToValueObject(textItemVersions)
+      ),
+      (page.properties ?? []).map((pageProperty) => new PageProperty(
+        pageProperty.property,
+        this.mapTextItemVersionsToValueObject(pageProperty.value),
+      )),
     );
   }
+
+  private mapTextItemToValueObject = ({text, season, episode}: ITextItemSchemaDoc) =>
+    new TextItem(text, season, episode);
+
+  private mapTextItemVersionsToValueObject = (textItemVersions: ITextItemSchemaDoc[]) =>
+    new TextItemVersions(textItemVersions.map(this.mapTextItemToValueObject));
 
   findRawById = async (id: string): Promise<IPageDoc> => {
     const pageId = this.toObjectId(id);
