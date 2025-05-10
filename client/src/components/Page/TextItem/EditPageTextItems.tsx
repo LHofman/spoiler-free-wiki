@@ -4,12 +4,8 @@ import { IconEdit, IconTrash } from '@tabler/icons-react';
 import { Fragment, useState } from 'react';
 import ConfirmationModel from '../../ConfirmationModel';
 import TextItemForm from './TextItemForm';
+import { TextItem } from '../../../types/PageTypes';
 
-interface TextItem {
-  text: string;
-  season: number;
-  episode: number;
-}
 interface EditPageTextItemsProps {
   textItems: TextItem[][];
   update: (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) => void;

@@ -10,7 +10,7 @@ export default class PageAggregate {
 
   public toDTO(season: number = 0, episode: number = 0): PageDTO {
     return {
-      id: this.id,
+      _id: this.id,
       title: this.title,
       text: this.text.map((textItemVersions: TextItemVersions) => {
         return textItemVersions.getSpoilerFreeText(season, episode);

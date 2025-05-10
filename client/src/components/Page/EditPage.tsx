@@ -6,17 +6,8 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import EditPageTextItems from './TextItem/EditPageTextItems';
 import PageForm from './TextItem/PageForm';
+import { Page, TextItem } from '../../types/PageTypes';
 
-interface TextItem {
-  text: string;
-  season: number;
-  episode: number;
-}
-interface Page {
-  _id: string;
-  title: string;
-  text: TextItem[][];
-}
 interface EditPage {
   title: string;
 }

@@ -1,12 +1,8 @@
 import { Button, Textarea, NumberInput } from '@mantine/core';
 import { isNotEmpty, useForm } from '@mantine/form';
 import { useEffect } from 'react';
+import { TextItem } from '../../../types/PageTypes';
 
-interface TextItem {
-  text: string;
-  season: number;
-  episode: number;
-}
 interface TextItemProps {
   handleSubmit: (values: TextItem) => void;
   initialValues?: TextItem;

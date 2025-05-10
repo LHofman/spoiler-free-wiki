@@ -1,5 +1,5 @@
 export default interface PageDTO {
-  id: string;
+  _id: string;
   title: string;
   text: string[];
 }

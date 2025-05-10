@@ -2,25 +2,20 @@ import axios from 'axios';
 import { useState, useEffect } from 'react'
 import { useAppSelector } from '../../store/hooks';
 import { Link } from '@tanstack/react-router';
-
-interface Page {
-  id: string;
-  title: string;
-  text: string[];
-}
+import { PageDetails } from '../../types/PageTypes';
 
 interface PageDetailsProps {
   pageId: string;
 }
 
-function PageDetails(props: PageDetailsProps) {
+function PageDetailsComponent(props: PageDetailsProps) {
   const progress = useAppSelector((state) => state.progress);
-  const [page, setPage] = useState<Page|null>(null);
+  const [page, setPage] = useState<PageDetails|null>(null);
 
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        const response = await axios.get<Page>(
+        const response = await axios.get<PageDetails>(
           `http://localhost:3000/api/pages/${props.pageId}/${progress.season}/${progress.episode}`
         );
         console.log("Fetched page:", response.data);
@@ -41,4 +36,4 @@ function PageDetails(props: PageDetailsProps) {
   );
 }
 
-export default PageDetails;
+export default PageDetailsComponent;
