@@ -55,6 +55,7 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
     }
 
     props.update(currentTextItemIndex, currentTextItemVersionIndex, values);
+
     closeModel();
   };
 
@@ -66,11 +67,13 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
 
   const submitDelete = () => {
     props.delete(currentTextItemIndex, currentTextItemVersionIndex);
+
     closeConfirmationModel();
   }
 
   const closeModel = () => {
     setCurrentTextItemIndex(-1);
+    setCurrentTextItemVersionIndex(-1);
     setEditModelInitialValues(undefined);
     close();
   }
@@ -101,6 +104,7 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
         </div>
       ))
     }
+    <br /><br />
     <Button variant='filled' onClick={() => { openAddNewTextModel() }}>Add New Text Item</Button>
   </>
   );
