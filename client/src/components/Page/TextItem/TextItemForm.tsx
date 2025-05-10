@@ -22,6 +22,7 @@ function TextItemForm(props: TextItemProps) {
     },
     validate: {
       text: isNotEmpty('Text is required'),
+      episode: (value, values) => values.season === 0 && value > 0 ? 'Episode can only be 0 if season is 0' : null,
     },
   });
 

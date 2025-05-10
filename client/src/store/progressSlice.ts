@@ -6,7 +6,7 @@ interface ProgressState {
 }
 
 const initialState: ProgressState = {
-  season: 0,
+  season: 1,
   episode: 0,
 };
 

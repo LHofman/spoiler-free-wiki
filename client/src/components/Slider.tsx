@@ -15,7 +15,7 @@ function Slider() {
 
   return (
     <>
-      <input type="range" min="0" max="3" value={progress.season} onChange={handleSeasonChange}/> {progress.season}
+      <input type="range" min="1" max="3" value={progress.season} onChange={handleSeasonChange}/> {progress.season}
       <br />
       <input type="range" min="0" max="10" value={progress.episode} onChange={handleEpisodeChange} /> {progress.episode}
     </>
