@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import PageList from '../../Application/Port/DTO/PageList';
 import { IPageDoc } from '../../Infrastructure/Outgoing/Model/Page';
 import PageAggregate from '../Aggregate/PageAggregate';
@@ -9,7 +10,7 @@ export default interface PageRepository {
 
   findRawById(id: string): Promise<IPageDoc>;
   
-  add(body: { title: string }): Promise<IPageDoc>;
+  add(body: { _id: mongoose.Types.ObjectId, title: string }): Promise<void>;
 
   update(id: string, body: IPageDoc): Promise<void>;
 

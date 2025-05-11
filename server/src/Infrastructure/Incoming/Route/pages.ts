@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express';
 import PageRepository from '../../../Domain/Repository/PageRepository';
 import MongoosePageRepository from '../../Outgoing/Repository/MongoosePageRepository';
+import AddPage from '../../../Application/Command/AddPage';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -49,8 +51,15 @@ router.get('/:id{/:season}{/:episode}', async (req: Request<GetByIdparams>, res:
 
 router.post('/', async (req: Request<{ title: string }>, res: Response) => {
   try {
+    const newPage = {
+      _id: new mongoose.Types.ObjectId(),
+      ...req.body
+    };
+
     const pageRepository = new MongoosePageRepository();
-    const newPage = await pageRepository.add(req.body);
+    const addPageservice = new AddPage(pageRepository);
+    await addPageservice.add(newPage);
+
     res.json(newPage);
   } catch (error) {
     res.status(400).json({ error });

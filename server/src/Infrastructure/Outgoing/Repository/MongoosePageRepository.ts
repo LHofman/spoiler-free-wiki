@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import PageList from '../../../Application/Port/DTO/PageList';
 import PageAggregate from '../../../Domain/Aggregate/PageAggregate';
 import DocumentNotFoundError from '../../../Domain/Error/DocumentNotFoundError';
@@ -55,9 +56,8 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     return page;
   }
 
-  add = async (body: { title: string }): Promise<IPageDoc> => {
-    const newPage = await Page.insertOne(body);
-    return newPage;
+  add = async (body: { _id: mongoose.Types.ObjectId, title: string }): Promise<void> => {
+    await Page.insertOne(body);
   }
 
   update = async (id: string, body: IPageDoc): Promise<void> => {
