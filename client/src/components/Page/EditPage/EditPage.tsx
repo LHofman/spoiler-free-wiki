@@ -122,7 +122,9 @@ function EditPage(props: EditPageProps) {
       </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
       <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
+      <hr />
       <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
+      <hr />
     </>
   );
 }

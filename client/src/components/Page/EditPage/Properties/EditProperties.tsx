@@ -1,58 +1,15 @@
-import { Button, Modal } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import { useState } from 'react';
 import { Property, TextItem } from '../../../../types/PageTypes';
 import EditPageTextItemVersions from '../TextItem/EditPageTextItemVersions';
 import PropertyForm from './PropertyForm';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
-import ConfirmationModel from '../../../ConfirmationModel';
+import EditableList from '../../../Shared/Edit/EditableList';
+import { ReactNode } from 'react';
 
 interface EditPropertiesProps {
   properties: Property[];
   update: (propertyIndex: number, property: Property) => void;
   delete: (propertyIndex: number) => void;
 }
-
-function EditProperties(props: EditPropertiesProps) {
-  const [isModelOpen, { open: openModel, close }] = useDisclosure(false);
-  const [isConfirmationModelOpen, { open: openConfirmationModel, close: closeConfirmationModel }] = useDisclosure(false);
-  const [currentPropertyIndex, setCurrentPropertyIndex] = useState<number>(-1);
-  const [editModelInitialValues, setEditModelInitialValues] = useState<Property|undefined>(undefined);
-    
-  const openAddNewPropertyModel = () => {
-    setCurrentPropertyIndex(props.properties.length || 0);
-    openModel();
-  }
- 
-  const openEditModel = (propertyIndex: number) => {
-    setCurrentPropertyIndex(propertyIndex);
-    setEditModelInitialValues(props.properties[propertyIndex]);
-    openModel();
-  }
-
-  const submitAddEditProperty = async (values: Property) => {
-    props.update(currentPropertyIndex, values);
-
-    closeModel();
-  };
-
-  const closeModel = () => {
-    setCurrentPropertyIndex(-1);
-    setEditModelInitialValues(undefined);
-    close();
-  }
-
-  const openDeleteModel = (propertyIndex: number) => {
-    setCurrentPropertyIndex(propertyIndex);
-    openConfirmationModel();
-  }
-
-  const submitDelete = () => {
-    props.delete(currentPropertyIndex);
-
-    closeConfirmationModel();
-  }
-
+function EditProperties(props: EditPropertiesProps) {    
   const handleAddEditTextItemVersion = (propertyIndex: number, textItemVersionIndex: number, textItem: TextItem) => {
     const updatedProperty = Object.assign({}, props.properties[propertyIndex]);
 
@@ -75,32 +32,28 @@ function EditProperties(props: EditPropertiesProps) {
 
   return (
     <>
-      <ConfirmationModel isOpen={isConfirmationModelOpen} action='delete this property' confirmAction={submitDelete} cancelAction={closeConfirmationModel} />
-      <Modal opened={isModelOpen} onClose={closeModel} title='Add Property' centered>
-        <PropertyForm handleSubmit={submitAddEditProperty} initialValues={editModelInitialValues} />
-      </Modal>
-
       <h2>Properties</h2>
-      
-      { props.properties.map((property: Property, propertyIndex: number) => (
-        <>
-          <h3>
-            {property.property}
-            <IconEdit color='orange' onClick={() => { openEditModel(propertyIndex) }}/>
-            { property.value.length === 0 &&
-              <IconTrash color='salmon' onClick={() => { openDeleteModel(propertyIndex) }}/>
-            }
-          </h3>
-          <EditPageTextItemVersions
-            key={propertyIndex}
-            textItemVersions={property.value}
-            update={ (versionIndex: number, textItem: TextItem) => handleAddEditTextItemVersion(propertyIndex, versionIndex, textItem) }
-            delete={ (versionIndex: number) => handleDeleteTextItemVersion(propertyIndex, versionIndex) } />
-        </>
-      )) }
-    <br /><br />
-    <Button variant='filled' onClick={() => { openAddNewPropertyModel() }}>Add New Property</Button>
-  </>
+      <EditableList<Property, typeof PropertyForm>
+        itemName="Property"
+        items={props.properties}
+        renderItem={ (property: Property, index: number, icons: ReactNode) => (
+          <>
+            <h2>
+              {property.property}
+              {icons}
+            </h2>
+            <EditPageTextItemVersions
+              key={index}
+              textItemVersions={property.value}
+              update={ (versionIndex: number, textItem: TextItem) => handleAddEditTextItemVersion(index, versionIndex, textItem) }
+              delete={ (versionIndex: number) => handleDeleteTextItemVersion(index, versionIndex) } />
+          </>
+        ) }
+        formComponent={PropertyForm}
+        update={props.update}
+        canDelete={ (property: Property) => property.value.length === 0 }
+        delete={props.delete} />
+    </>
   );
 }
 

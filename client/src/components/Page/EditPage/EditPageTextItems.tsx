@@ -1,6 +1,5 @@
 import { Button, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useState } from 'react';
 import TextItemForm from './TextItem/TextItemForm';
 import { TextItem } from '../../../types/PageTypes';
 import EditPageTextItemVersions from './TextItem/EditPageTextItemVersions';
@@ -12,28 +11,16 @@ interface EditPageTextItemsProps {
 }
 
 function EditPageTextItems(props: EditPageTextItemsProps) {
-  const [isModelOpen, { open: openModel, close }] = useDisclosure(false);
-  const [currentTextItemIndex, setCurrentTextItemIndex] = useState<number>(-1);
+  const [isModelOpen, { open, close }] = useDisclosure(false);
     
-  const openAddNewTextModel = () => {
-    setCurrentTextItemIndex(props.textItems.length || 0);
-    openModel();
-  }
-
   const submitAddNewTextItem = async (values: TextItem) => {
-    props.update(currentTextItemIndex, -1, values);
-
-    closeModel();
-  };
-
-  const closeModel = () => {
-    setCurrentTextItemIndex(-1);
+    props.update(props.textItems.length || 0, -1, values);
     close();
-  }
+  };
 
   return (
     <>
-      <Modal opened={isModelOpen} onClose={closeModel} title='Add Text Version' centered>
+      <Modal opened={isModelOpen} onClose={close} title='Add Text Version' centered>
         <TextItemForm handleSubmit={submitAddNewTextItem} />
       </Modal>
 
@@ -47,7 +34,8 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
           delete={ (versionIndex: number) => props.delete(itemIndex, versionIndex) } />
       )) }
     <br /><br />
-    <Button variant='filled' onClick={() => { openAddNewTextModel() }}>Add New Text Item</Button>
+    <Button variant='filled' onClick={open}>Add New Text Item</Button>
+    <hr />
   </>
   );
 }
