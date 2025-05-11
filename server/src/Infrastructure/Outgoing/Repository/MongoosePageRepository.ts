@@ -15,7 +15,11 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
   getList = async (): Promise<PageList> => {
     const pages = await Page.find();
 
-    return pages.map((page: IPageDoc) => ({ _id: page._id, title: page.title }));
+    return pages.map((page: IPageDoc) => ({
+      _id: page._id,
+      title: page.title,
+      canDelete: (!page.text.length && !page.properties.length && !page.textSections.length),
+    }));
   }
 
   findById = async (id: string): Promise<PageAggregate> => {

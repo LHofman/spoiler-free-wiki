@@ -10,6 +10,7 @@ import ConfirmationModel from './Shared/ConfirmationModel';
 type PageList = {
   _id: string;
   title: string;
+  canDelete: boolean;
 }[];
 interface AddPage {
   title: string;
@@ -81,7 +82,7 @@ function PageList() {
       { pageList && pageList.map((page) => (
         <Fragment key={page._id}>
           <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>{ page.title }</Link>
-          <IconTrash color='salmon' onClick={() => { openDeleteModel(page._id) }}/>
+          { page.canDelete && <IconTrash color='salmon' onClick={() => { openDeleteModel(page._id) }}/> }
           <br />
         </Fragment>
       )) }
