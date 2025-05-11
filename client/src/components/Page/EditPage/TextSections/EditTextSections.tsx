@@ -1,10 +1,11 @@
-import { Fragment } from 'react';
+import { useState } from 'react';
 import { TextSection, TextItem } from '../../../../types/PageTypes';
 import EditPageTextItems from '../EditPageTextItems';
 import EditPageTextItemVersions from '../TextItem/EditPageTextItemVersions';
 import { useDisclosure } from '@mantine/hooks';
-import { Button, Modal } from '@mantine/core';
+import { Modal, Tabs } from '@mantine/core';
 import TextItemForm from '../TextItem/TextItemForm';
+import { getLastItem } from '../../../../utils/arrayUtils';
 
 interface EditTextSectionsProps {
   textSections: TextSection[];
@@ -13,6 +14,7 @@ interface EditTextSectionsProps {
 }
 function EditTextSections(props: EditTextSectionsProps) {
   const [isModelOpen, { open, close }] = useDisclosure(false);
+  const [activeTab, setActiveTab] = useState<string | null>('0');
     
   const handleAddTextSection = async (values: TextItem) => {
     const newTextSection: TextSection = {
@@ -44,6 +46,7 @@ function EditTextSections(props: EditTextSectionsProps) {
 
     if (updatedTextSection.title.length === 0) {
       props.delete(textSectionIndex);
+      setActiveTab('0');
       return;
     }
     
@@ -92,28 +95,36 @@ function EditTextSections(props: EditTextSectionsProps) {
 
       <h2>Text Sections</h2>
 
-      { props.textSections.map((textSection, index) => (
-        <Fragment key={index}>
-          <EditPageTextItemVersions
-            key={index}
-            textItemVersions={textSection.title}
-            update={ (versionIndex: number, textItem: TextItem) => handleAddEditTitle(index, versionIndex, textItem) }
-            delete={ (versionIndex: number) => handleDeleteTitle(index, versionIndex) } />
+      <Tabs color='red' defaultValue={'0'} value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          { props.textSections.map((textSection, index) => (
+            <Tabs.Tab key={index} value={'' + index}>{getLastItem(textSection.title)!.text}</Tabs.Tab>
+          )) }
+          <Tabs.Tab value={'' + props.textSections.length} onClick={open}>Add New Text Section</Tabs.Tab>
+        </Tabs.List>
+        
+        { props.textSections.map((textSection, index) => (
+          <Tabs.Panel key={index} value={'' + index}>
+            <EditPageTextItemVersions
+              key={index}
+              textItemVersions={textSection.title}
+              update={ (versionIndex: number, textItem: TextItem) => handleAddEditTitle(index, versionIndex, textItem) }
+              canDelete={ () => textSection.title.length > 1 || textSection.text.length === 0 }
+              delete={ (versionIndex: number) => handleDeleteTitle(index, versionIndex) } />
 
-          <EditPageTextItems
-            textItems={textSection.text}
-            update={
-              (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) =>
-                handleAddEditTextItem(index, textItemIndex, textItemVersionIndex, textItem)
-            }
-            delete={
-              (textItemIndex: number, textItemVersionIndex: number) =>
-                handleDeleteTextItemVersion(index, textItemIndex, textItemVersionIndex)
-            } />
-        </Fragment>
-      )) }
-      <br /><br />
-      <Button variant='filled' onClick={open}>Add New Text Section</Button>
+            <EditPageTextItems
+              textItems={textSection.text}
+              update={
+                (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) =>
+                  handleAddEditTextItem(index, textItemIndex, textItemVersionIndex, textItem)
+              }
+              delete={
+                (textItemIndex: number, textItemVersionIndex: number) =>
+                  handleDeleteTextItemVersion(index, textItemIndex, textItemVersionIndex)
+              } />
+          </Tabs.Panel>
+        )) }
+      </Tabs>
     </>
   );
 }

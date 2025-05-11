@@ -6,6 +6,7 @@ import { Fragment, ReactNode } from 'react';
 interface EditPageTextItemVersionsProps {
   textItemVersions: TextItem[];
   update: (textItemVersionIndex: number, textItem: TextItem) => void;
+  canDelete?: (textItemVersion: TextItem) => boolean;
   delete: (textItemVersionIndex: number) => void;
 }
 
@@ -40,6 +41,7 @@ function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
         ) }
         formComponent={TextItemForm}
         update={ (index: number, updatedItem: TextItem) => submitAddEditTextItem(index, updatedItem) }
+        canDelete={props.canDelete ?? undefined}
         delete={props.delete} />
     </>
   );

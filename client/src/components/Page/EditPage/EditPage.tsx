@@ -1,4 +1,4 @@
-import { Modal } from '@mantine/core';
+import { Modal, Tabs } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconEdit } from '@tabler/icons-react';
 import { Link } from '@tanstack/react-router';
@@ -145,12 +145,23 @@ function EditPage(props: EditPageProps) {
         <IconEdit color='orange' onClick={openEditModel} />
       </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
-      <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
-      <hr />
-      <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
-      <hr />
-      <EditTextSections textSections={page.textSections} update={handleAddEditTextSection} delete={handleDeleteTextSection} />
-      <hr />
+
+      <Tabs color='red' defaultValue='Properties'>
+        <Tabs.List>
+          <Tabs.Tab value='Properties'>Properties</Tabs.Tab>
+          <Tabs.Tab value='Information'>Information</Tabs.Tab>
+          <Tabs.Tab value='Text Sections'>Text Sections</Tabs.Tab>
+        </Tabs.List>
+        <Tabs.Panel value='Properties'>
+          <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
+        </Tabs.Panel>
+        <Tabs.Panel value='Information'>
+          <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
+        </Tabs.Panel>
+        <Tabs.Panel value='Text Sections'>
+          <EditTextSections textSections={page.textSections} update={handleAddEditTextSection} delete={handleDeleteTextSection} />
+        </Tabs.Panel>
+      </Tabs>
     </>
   );
 }
