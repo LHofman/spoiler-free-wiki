@@ -1,12 +1,7 @@
-// import { Button, Modal } from '@mantine/core';
-// import { useDisclosure } from '@mantine/hooks';
-// import { IconEdit, IconTrash } from '@tabler/icons-react';
-// import { Fragment, useState } from 'react';
-// import ConfirmationModel from '../../../ConfirmationModel';
 import TextItemForm from './TextItemForm';
 import { TextItem } from '../../../../types/PageTypes';
 import EditableList from '../../../Shared/Edit/EditableList';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 
 interface EditPageTextItemVersionsProps {
   textItemVersions: TextItem[];
@@ -15,17 +10,6 @@ interface EditPageTextItemVersionsProps {
 }
 
 function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
-  // const [isModelOpen, { open: openModel, close }] = useDisclosure(false);
-  // const [isConfirmationModelOpen, { open: openConfirmationModel, close: closeConfirmationModel }] = useDisclosure(false);
-  // const [currentTextItemVersionIndex, setCurrentTextItemVersionIndex] = useState<number>(-1);
-  // const [editModelInitialValues, setEditModelInitialValues] = useState<TextItem|undefined>(undefined);
-    
-  // const openEditModel = (versionIndex: number) => {
-  //   setCurrentTextItemVersionIndex(versionIndex);
-  //   setEditModelInitialValues(props.textItemVersions[versionIndex]);
-  //   openModel();
-  // }
-
   const submitAddEditTextItem = async (currentTextItemVersionIndex: number, values: TextItem) => {
     const differentTextItemWithSameSeasonAndEpisode =
       props.textItemVersions.filter((textItem, index) => (
@@ -42,34 +26,17 @@ function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
     props.update(currentTextItemVersionIndex, values);
   };
 
-  // const openDeleteModel = (versionIndex: number) => {
-  //   setCurrentTextItemVersionIndex(versionIndex);
-  //   openConfirmationModel();
-  // }
-
-  // const submitDelete = () => {
-  //   props.delete(currentTextItemVersionIndex);
-
-  //   closeConfirmationModel();
-  // }
-
-  // const closeModel = () => {
-  //   setCurrentTextItemVersionIndex(-1);
-  //   setEditModelInitialValues(undefined);
-  //   close();
-  // }
-
   return (
     <>
       <EditableList<TextItem, typeof TextItemForm>
         itemName="Text Item"
         items={props.textItemVersions}
-        renderItem={ (textItem: TextItem, _, icons: ReactNode) => (
-          <>
+        renderItem={ (textItem: TextItem, index: number, icons: ReactNode) => (
+          <Fragment key={index}>
             {textItem.text} (S{textItem.season} E{textItem.episode})
             {icons}
             <br />
-          </>
+          </Fragment>
         ) }
         formComponent={TextItemForm}
         update={ (index: number, updatedItem: TextItem) => submitAddEditTextItem(index, updatedItem) }

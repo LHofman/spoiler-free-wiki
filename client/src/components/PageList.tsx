@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react';
 import PageForm from './Page/EditPage/PageForm';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTrash } from '@tabler/icons-react';
-import ConfirmationModel from './ConfirmationModel';
+import ConfirmationModel from './Shared/ConfirmationModel';
 
 type PageList = {
   _id: string;

@@ -6,8 +6,9 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import EditPageTextItems from './EditPageTextItems';
 import PageForm from './PageForm';
-import { Page, Property, TextItem } from '../../../types/PageTypes';
+import { Page, Property, TextItem, TextSection } from '../../../types/PageTypes';
 import EditProperties from './Properties/EditProperties';
+import EditTextSections from './TextSections/EditTextSections';
 
 interface EditPage {
   title: string;
@@ -97,6 +98,29 @@ function EditPage(props: EditPageProps) {
     updatePage(updatedPage);
   }
 
+  const handleAddEditTextSection = (textSectionIndex: number, textSection: TextSection) => {
+    const updatedPage = Object.assign({}, page);
+    if (textSectionIndex === -1) {
+      updatedPage.textSections.push(textSection);
+    } else {
+      updatedPage.textSections[textSectionIndex] = textSection;
+    }
+
+    updatePage(updatedPage);
+  };
+
+  const handleDeleteTextSection = (textSectionIndex: number) => {
+    if (page?.textSections[textSectionIndex].text.length ?? 0 > 0) {
+      alert('Cannot delete a property that has text');
+      return;
+    }
+
+    const updatedPage = Object.assign({}, page);
+    updatedPage.textSections.splice(textSectionIndex, 1);
+    
+    updatePage(updatedPage);
+  }
+
   const updatePage = async (updatedPage: Page): Promise<void> => {
     try {
       const response = await axios.put(
@@ -121,9 +145,11 @@ function EditPage(props: EditPageProps) {
         <IconEdit color='orange' onClick={openEditModel} />
       </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
+      <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
+      <hr />
       <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
       <hr />
-      <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
+      <EditTextSections textSections={page.textSections} update={handleAddEditTextSection} delete={handleDeleteTextSection} />
       <hr />
     </>
   );

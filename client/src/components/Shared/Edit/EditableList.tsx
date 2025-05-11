@@ -2,7 +2,7 @@ import { Button, Modal } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React, { FC, ReactNode, useState } from 'react';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
-import ConfirmationModel from '../../ConfirmationModel';
+import ConfirmationModel from '../ConfirmationModel';
 
 type ItemForm<I> = FC<{
   handleSubmit: (updatedItem: I) => void,

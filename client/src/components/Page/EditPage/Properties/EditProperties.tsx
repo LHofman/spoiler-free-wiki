@@ -2,7 +2,7 @@ import { Property, TextItem } from '../../../../types/PageTypes';
 import EditPageTextItemVersions from '../TextItem/EditPageTextItemVersions';
 import PropertyForm from './PropertyForm';
 import EditableList from '../../../Shared/Edit/EditableList';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 
 interface EditPropertiesProps {
   properties: Property[];
@@ -37,7 +37,7 @@ function EditProperties(props: EditPropertiesProps) {
         itemName="Property"
         items={props.properties}
         renderItem={ (property: Property, index: number, icons: ReactNode) => (
-          <>
+          <Fragment key={index}>
             <h2>
               {property.property}
               {icons}
@@ -47,7 +47,7 @@ function EditProperties(props: EditPropertiesProps) {
               textItemVersions={property.value}
               update={ (versionIndex: number, textItem: TextItem) => handleAddEditTextItemVersion(index, versionIndex, textItem) }
               delete={ (versionIndex: number) => handleDeleteTextItemVersion(index, versionIndex) } />
-          </>
+          </Fragment>
         ) }
         formComponent={PropertyForm}
         update={props.update}

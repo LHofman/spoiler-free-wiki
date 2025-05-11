@@ -5,6 +5,7 @@ import PageRepository from '../../../Domain/Repository/PageRepository';
 import PageProperty from '../../../Domain/ValueObject/PageProperty';
 import TextItem from '../../../Domain/ValueObject/TextItem';
 import TextItemVersions from '../../../Domain/ValueObject/TextItemVersions';
+import TextSection from '../../../Domain/ValueObject/TextSection';
 import Page, { IPageDoc } from '../Model/Page';
 import { ITextItemSchemaDoc } from '../Model/TextItemSchema';
 import MongooseRepository from './MongooseRepository';
@@ -26,12 +27,14 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     return new PageAggregate(
       page.id,
       page.title,
-      page.text.map(
-        (textItemVersions: ITextItemSchemaDoc[]) => this.mapTextItemVersionsToValueObject(textItemVersions)
-      ),
       (page.properties ?? []).map((pageProperty) => new PageProperty(
         pageProperty.property,
         this.mapTextItemVersionsToValueObject(pageProperty.value),
+      )),
+      page.text.map(this.mapTextItemVersionsToValueObject),
+      (page.textSections ?? []).map((textSection) => new TextSection(
+        this.mapTextItemVersionsToValueObject(textSection.title),
+        textSection.text.map(this.mapTextItemVersionsToValueObject),
       )),
     );
   }
