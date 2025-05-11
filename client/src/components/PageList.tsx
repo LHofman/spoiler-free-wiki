@@ -6,6 +6,7 @@ import PageForm from './Page/EditPage/PageForm';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTrash } from '@tabler/icons-react';
 import ConfirmationModel from './Shared/ConfirmationModel';
+import ClickableIcon from './Shared/ClickableIcon';
 
 type PageList = {
   _id: string;
@@ -82,7 +83,9 @@ function PageList() {
       { pageList && pageList.map((page) => (
         <Fragment key={page._id}>
           <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>{ page.title }</Link>
-          { page.canDelete && <IconTrash color='salmon' onClick={() => { openDeleteModel(page._id) }}/> }
+          { page.canDelete && (
+            <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(page._id) }} />
+          ) }
           <br />
         </Fragment>
       )) }

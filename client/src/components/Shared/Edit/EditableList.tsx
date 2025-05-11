@@ -3,6 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import React, { FC, ReactNode, useState } from 'react';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import ConfirmationModel from '../ConfirmationModel';
+import ClickableIcon from '../ClickableIcon';
 
 type ItemForm<I> = FC<{
   handleSubmit: (updatedItem: I) => void,
@@ -74,9 +75,9 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
 
       { props.items.map((item: I, index: number) => props.renderItem(item, index,
         <>
-          <IconEdit color='orange' onClick={() => { openEditModel(index) }}/>
+          <ClickableIcon icon={IconEdit} color='orange' onClick={() => { openEditModel(index) }} />
           { (!props.canDelete || props.canDelete(item)) &&
-            <IconTrash color='salmon' onClick={() => { openDeleteModel(index) }}/>
+            <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(index) }} />
           }
         </>
       )) }

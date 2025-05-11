@@ -9,6 +9,7 @@ import PageForm from './PageForm';
 import { Page, Property, TextItem, TextSection } from '../../../types/PageTypes';
 import EditProperties from './Properties/EditProperties';
 import EditTextSections from './TextSections/EditTextSections';
+import ClickableIcon from '../../Shared/ClickableIcon';
 
 interface EditPage {
   title: string;
@@ -142,7 +143,7 @@ function EditPage(props: EditPageProps) {
       </Modal>
       <h1>
         { page.title }
-        <IconEdit color='orange' onClick={openEditModel} />
+        <ClickableIcon icon={IconEdit} color='orange' onClick={openEditModel} />
       </h1>
       <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>Back to Page View</Link>
 
