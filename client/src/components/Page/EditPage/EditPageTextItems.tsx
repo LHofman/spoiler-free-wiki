@@ -3,21 +3,47 @@ import { useDisclosure } from '@mantine/hooks';
 import TextItemForm from './TextItem/TextItemForm';
 import { TextItem } from '../../../types/PageTypes';
 import EditPageTextItemVersions from './TextItem/EditPageTextItemVersions';
+import DragAndDropList from '../../Shared/Edit/DragAndDropList';
 
 interface EditPageTextItemsProps {
   textItems: TextItem[][];
-  update: (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) => void;
-  delete: (textItemIndex: number, textItemVersionIndex: number) => void;
+  update: (updatedTextItems: TextItem[][]) => Promise<void>;
 }
 
 function EditPageTextItems(props: EditPageTextItemsProps) {
   const [isModelOpen, { open, close }] = useDisclosure(false);
+
+  const updateTextItemVersions = async(itemIndex: number, updatedTextItemVersions: TextItem[]): Promise<void> => {
+    const updatedTextItems = props.textItems;
+
+    if (itemIndex === -1) {
+      updatedTextItems.push(updatedTextItemVersions);
+    } else {
+      updatedTextItems[itemIndex] = updatedTextItemVersions;
+    }
+
+    props.update(updatedTextItems);
+  };
+
+  const deleteTextItemVersions = async (itemIndex: number): Promise<void> => {
+    const updatedTextItems = props.textItems;
+    updatedTextItems.splice(itemIndex, 1);
+    props.update(updatedTextItems);
+  }
     
   const submitAddNewTextItem = async (values: TextItem) => {
-    props.update(props.textItems.length || 0, -1, values);
+    updateTextItemVersions(-1, [values]);
     close();
   };
 
+  const reorderTextItem = (sourceIndex: number, destinationIndex: number) => {
+    const updatedTextItems = props.textItems;
+    const [removed] = updatedTextItems.splice(sourceIndex, 1);
+    updatedTextItems.splice(destinationIndex, 0, removed);
+
+    props.update(updatedTextItems);
+  }
+   
   return (
     <>
       <Modal opened={isModelOpen} onClose={close} title='Add Text Version' centered>
@@ -26,16 +52,18 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
 
       <h2>Text Items</h2>
       
-      { props.textItems.map((textItemVersions: TextItem[], itemIndex: number) => (
+      <DragAndDropList<TextItem[]>
+        items={props.textItems}
+        reorder={reorderTextItem}
+        renderItem={(textItemVersions: TextItem[], itemIndex: number) => (
         <EditPageTextItemVersions
           key={itemIndex}
           textItemVersions={textItemVersions}
-          update={ (versionIndex: number, textItem: TextItem) => props.update(itemIndex, versionIndex, textItem) }
-          delete={ (versionIndex: number) => props.delete(itemIndex, versionIndex) } />
-      )) }
-    <br /><br />
+          update={ (updatedTextItemVersions: TextItem[]) => updateTextItemVersions(itemIndex, updatedTextItemVersions) }
+          delete={ () => deleteTextItemVersions(itemIndex) } />
+      )} />
+    <br />
     <Button variant='filled' onClick={open}>Add New Text Item</Button>
-    <hr />
   </>
   );
 }

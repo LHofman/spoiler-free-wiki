@@ -4,6 +4,7 @@ import React, { FC, ReactNode, useState } from 'react';
 import { IconEdit, IconTrash } from '@tabler/icons-react';
 import ConfirmationModel from '../ConfirmationModel';
 import ClickableIcon from '../ClickableIcon';
+import DragAndDropList from './DragAndDropList';
 
 type ItemForm<I> = FC<{
   handleSubmit: (updatedItem: I) => void,
@@ -15,10 +16,11 @@ interface EditableListProps<I, IF extends ItemForm<I>> {
   items: I[];
   renderItem: (item: I, index: number, icons: ReactNode) => ReactNode;
   formComponent: IF;
-  update: (index: number, updatedItem: I) => void;
+  update: (index: number, updatedItem: I) => Promise<boolean>;
   canDelete?: (item: I) => boolean;
   delete: (index: number) => void;
   itemChildren?: (item: I, index: number) => ReactNode;
+  reorder?: (sourceIndex: number, destinationIndex: number) => void;
 }
 
 function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>) {
@@ -39,9 +41,9 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
   }
 
   const submitAddEditItem = async (updatedItem: I) => {
-    props.update(currentIndex, updatedItem);
+    const success = await props.update(currentIndex, updatedItem);
 
-    closeModel();
+    if (success) closeModel();
   };
 
   const closeModel = () => {
@@ -61,6 +63,15 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
     closeConfirmationModel();
   }
 
+  const renderItem = (item: I, index: number) => props.renderItem(item, index,
+    <>
+      <ClickableIcon icon={IconEdit} color='orange' onClick={() => { openEditModel(index) }} />
+      { (!props.canDelete || props.canDelete(item)) &&
+        <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(index) }} />
+      }
+    </>
+  );
+
   return (
     <>
       <ConfirmationModel
@@ -73,17 +84,19 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
         { React.createElement(props.formComponent, { handleSubmit: submitAddEditItem, initialValues: editModelInitialValues }) }
       </Modal>
 
-      { props.items.map((item: I, index: number) => props.renderItem(item, index,
-        <>
-          <ClickableIcon icon={IconEdit} color='orange' onClick={() => { openEditModel(index) }} />
-          { (!props.canDelete || props.canDelete(item)) &&
-            <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(index) }} />
-          }
-        </>
-      )) }
+      {
+        props.reorder
+          ? (
+            <DragAndDropList<I>
+              items={props.items}
+              reorder={props.reorder}
+              renderItem={renderItem} />
+          )
+          : props.items.map(renderItem)
+      }
+
       <br />
       <Button variant='filled' onClick={() => { openAddNewItemModel() }}>Add New {props.itemName}</Button>
-      <hr />
     </>
   );
 }

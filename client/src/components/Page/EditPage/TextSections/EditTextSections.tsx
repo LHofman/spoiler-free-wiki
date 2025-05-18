@@ -3,19 +3,41 @@ import { TextSection, TextItem } from '../../../../types/PageTypes';
 import EditPageTextItems from '../EditPageTextItems';
 import EditPageTextItemVersions from '../TextItem/EditPageTextItemVersions';
 import { useDisclosure } from '@mantine/hooks';
-import { Modal, Tabs } from '@mantine/core';
+import { Card, Modal, Tabs } from '@mantine/core';
 import TextItemForm from '../TextItem/TextItemForm';
 import { getLastItem } from '../../../../utils/arrayUtils';
-import { sortTextItemsCompareFn } from '../../../../utils/textItemUtils';
+import DragAndDropList from '../../../Shared/Edit/DragAndDropList';
 
 interface EditTextSectionsProps {
   textSections: TextSection[];
-  update: (textSectionIndex: number, textSection: TextSection) => void;
-  delete: (textSectionIndex: number) => void;
+  update: (updatedTextSections: TextSection[]) => Promise<void>;
 }
 function EditTextSections(props: EditTextSectionsProps) {
   const [isModelOpen, { open, close }] = useDisclosure(false);
-  const [activeTab, setActiveTab] = useState<string | null>('0');
+  const [activeTab, setActiveTab] = useState<string | null>('overview');
+
+  const handleAddEditTextSection = (textSectionIndex: number, textSection: TextSection) => {
+    const updatedTextSections = props.textSections;
+    if (textSectionIndex === -1) {
+      updatedTextSections.push(textSection);
+    } else {
+      updatedTextSections[textSectionIndex] = textSection;
+    }
+
+    props.update(updatedTextSections);
+  };
+
+  const deleteTextSection = async (textSectionIndex: number): Promise<void> => {
+    if (props.textSections[textSectionIndex].text.length ?? 0 > 0) {
+      alert('Cannot delete a property that has text');
+      return;
+    }
+
+    const updatedTextSections = props.textSections;
+    updatedTextSections.splice(textSectionIndex, 1);
+    
+    props.update(updatedTextSections);
+  }
     
   const handleAddTextSection = async (values: TextItem) => {
     const newTextSection: TextSection = {
@@ -23,75 +45,38 @@ function EditTextSections(props: EditTextSectionsProps) {
       text: [],
     };
 
-    props.update(-1, newTextSection);
+    handleAddEditTextSection(-1, newTextSection);
 
     close();
   };
 
-  const handleAddEditTitle = (textSectionIndex: number, titleIndex: number, title: TextItem) => {
-    const updatedTextSection = Object.assign({}, props.textSections[textSectionIndex]);
+  const updateTitles = async (
+    textSectionIndex: number,
+    updatedTitles: TextItem[]
+  ): Promise<void> => {
+    const updatedTextSections = props.textSections;
 
-    if (titleIndex === -1) {
-      updatedTextSection.title.push(title);
-    } else {
-      updatedTextSection.title[titleIndex] = title;
-    }
+    updatedTextSections[textSectionIndex].title = updatedTitles;
 
-    updatedTextSection.title.sort(sortTextItemsCompareFn);
-
-    props.update(textSectionIndex, updatedTextSection);
+    props.update(updatedTextSections);
   };
 
-  const handleDeleteTitle = (textSectionIndex: number, titleIndex: number) => {
-    const updatedTextSection = Object.assign({}, props.textSections[textSectionIndex]);
+  const updateTextItems = async (textSectionIndex: number, updatedTextItems: TextItem[][]): Promise<void> => {
+    const updatedTextSections = props.textSections;
 
-    updatedTextSection.title.splice(titleIndex, 1);
+    updatedTextSections[textSectionIndex].text = updatedTextItems;
 
-    if (updatedTextSection.title.length === 0) {
-      props.delete(textSectionIndex);
-      setActiveTab('0');
-      return;
-    }
+    props.update(updatedTextSections);
+  }
+
+  const reorderTextSection = (sourceIndex: number, destinationIndex: number) => {
+    const updatedTextSections = props.textSections;
+    const [removed] = updatedTextSections.splice(sourceIndex, 1);
+    updatedTextSections.splice(destinationIndex, 0, removed);
+
+    props.update(updatedTextSections);
+  }
     
-    props.update(textSectionIndex, updatedTextSection);
-  }
-
-  const handleAddEditTextItem = (
-    textSectionIndex: number,
-    textItemIndex: number,
-    textItemVersionIndex: number,
-    textItem: TextItem
-  ) => {
-    const updatedTextSection = Object.assign({}, props.textSections[textSectionIndex]);
-    if (!updatedTextSection.text[textItemIndex]) {
-      updatedTextSection.text[textItemIndex] = [];
-    }
-
-    if (textItemVersionIndex === -1) {
-      updatedTextSection.text[textItemIndex].push(textItem);
-    } else {
-      updatedTextSection.text[textItemIndex][textItemVersionIndex] = textItem;
-    }
-
-    updatedTextSection.text[textItemIndex].sort(sortTextItemsCompareFn);
-
-    props.update(textSectionIndex, updatedTextSection);
-  }
-
-  const handleDeleteTextItemVersion = (
-    textSectionIndex: number,
-    textItemIndex: number,
-    textItemVersionIndex: number
-  ) => {
-    const updatedTextSection = Object.assign({}, props.textSections[textSectionIndex]);
-    updatedTextSection.text[textItemIndex].splice(textItemVersionIndex, 1);
-    if (updatedTextSection.text[textItemIndex].length === 0) {
-      updatedTextSection.text.splice(textItemIndex, 1);
-    }
-    
-    props.update(textSectionIndex, updatedTextSection);
-  }
-
   return (
     <>
       <Modal opened={isModelOpen} onClose={close} title='Add Text Section' centered>
@@ -100,33 +85,38 @@ function EditTextSections(props: EditTextSectionsProps) {
 
       <h2>Text Sections</h2>
 
-      <Tabs color='red' defaultValue={'0'} value={activeTab} onChange={setActiveTab}>
+      <Tabs color='red' defaultValue={'overview'} value={activeTab} onChange={setActiveTab}>
         <Tabs.List>
+          <Tabs.Tab value='overview'>Overview</Tabs.Tab>
           { props.textSections.map((textSection, index) => (
             <Tabs.Tab key={index} value={'' + index}>{getLastItem(textSection.title)!.text}</Tabs.Tab>
           )) }
           <Tabs.Tab value={'' + props.textSections.length} onClick={open}>Add New Text Section</Tabs.Tab>
         </Tabs.List>
+
+        <Tabs.Panel key='overview' value={'overview'}>
+          <DragAndDropList<TextSection>
+            items={props.textSections}
+            reorder={reorderTextSection}
+            renderItem={(textSection: TextSection) => (
+              <Card style={{margin: '1em auto'}}>
+                {getLastItem(textSection.title)!.text}
+              </Card>
+            )} />
+        </Tabs.Panel>
         
         { props.textSections.map((textSection, index) => (
           <Tabs.Panel key={index} value={'' + index}>
             <EditPageTextItemVersions
               key={index}
               textItemVersions={textSection.title}
-              update={ (versionIndex: number, textItem: TextItem) => handleAddEditTitle(index, versionIndex, textItem) }
+              update={ (updatedTextItemVersions) => updateTitles(index, updatedTextItemVersions) }
               canDelete={ () => textSection.title.length > 1 || textSection.text.length === 0 }
-              delete={ (versionIndex: number) => handleDeleteTitle(index, versionIndex) } />
+              delete={ () => deleteTextSection(index) } />
 
             <EditPageTextItems
               textItems={textSection.text}
-              update={
-                (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) =>
-                  handleAddEditTextItem(index, textItemIndex, textItemVersionIndex, textItem)
-              }
-              delete={
-                (textItemIndex: number, textItemVersionIndex: number) =>
-                  handleDeleteTextItemVersion(index, textItemIndex, textItemVersionIndex)
-              } />
+              update={ (updatedTextItems: TextItem[][]) => updateTextItems(index, updatedTextItems) } />
           </Tabs.Panel>
         )) }
       </Tabs>

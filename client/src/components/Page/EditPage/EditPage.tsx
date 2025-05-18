@@ -10,7 +10,6 @@ import { Page, Property, TextItem, TextSection } from '../../../types/PageTypes'
 import EditProperties from './Properties/EditProperties';
 import EditTextSections from './TextSections/EditTextSections';
 import ClickableIcon from '../../Shared/ClickableIcon';
-import { sortTextItemsCompareFn } from '../../../utils/textItemUtils';
 
 interface EditPage {
   title: string;
@@ -52,77 +51,25 @@ function EditPage(props: EditPageProps) {
     close();
   };
 
-  const handleAddEditTextItem = (textItemIndex: number, textItemVersionIndex: number, textItem: TextItem) => {
+  const updateProperties  = (updatedProperties: Property[]): Promise<void> => {
     const updatedPage = Object.assign({}, page);
-    if (!updatedPage.text[textItemIndex]) {
-      updatedPage.text[textItemIndex] = [];
-    }
+    updatedPage.properties = updatedProperties;
 
-    if (textItemVersionIndex === -1) {
-      updatedPage.text[textItemIndex].push(textItem);
-    } else {
-      updatedPage.text[textItemIndex][textItemVersionIndex] = textItem;
-    }
-
-    updatedPage.text[textItemIndex].sort(sortTextItemsCompareFn);
-
-    updatePage(updatedPage);
-  };
-
-  const handleDeleteTextItemVersion = (textItemIndex: number, textItemVersionIndex: number) => {
-    const updatedPage = Object.assign({}, page);
-    updatedPage.text[textItemIndex].splice(textItemVersionIndex, 1);
-    if (updatedPage.text[textItemIndex].length === 0) {
-      updatedPage.text.splice(textItemIndex, 1);
-    }
-    
-    updatePage(updatedPage);
+    return updatePage(updatedPage);
   }
 
-  const handleAddEditProperty = (propertyIndex: number, property: Property) => {
+  const updateTextItems = (updatedTextItems: TextItem[][]): Promise<void> => {
     const updatedPage = Object.assign({}, page);
-    if (propertyIndex === -1) {
-      updatedPage.properties.push(property);
-    } else {
-      updatedPage.properties[propertyIndex] = property;
-    }
+    updatedPage.text = updatedTextItems;
 
-    updatePage(updatedPage);
-  };
-
-  const handleDeleteProperty = (propertyIndex: number) => {
-    if (page?.properties[propertyIndex].value.length ?? 0 > 0) {
-      alert('Cannot delete a property that has text');
-      return;
-    }
-
-    const updatedPage = Object.assign({}, page);
-    updatedPage.properties.splice(propertyIndex, 1);
-    
-    updatePage(updatedPage);
+    return updatePage(updatedPage);
   }
 
-  const handleAddEditTextSection = (textSectionIndex: number, textSection: TextSection) => {
+  const updateTextSections = (updatedTextSections: TextSection[]): Promise<void> => {
     const updatedPage = Object.assign({}, page);
-    if (textSectionIndex === -1) {
-      updatedPage.textSections.push(textSection);
-    } else {
-      updatedPage.textSections[textSectionIndex] = textSection;
-    }
+    updatedPage.textSections = updatedTextSections;
 
-    updatePage(updatedPage);
-  };
-
-  const handleDeleteTextSection = (textSectionIndex: number) => {
-    if (page?.textSections[textSectionIndex].text.length ?? 0 > 0) {
-      alert('Cannot delete a property that has text');
-      return;
-    }
-
-    const updatedPage = Object.assign({}, page);
-    updatedPage.textSections.splice(textSectionIndex, 1);
-    
-    updatePage(updatedPage);
+    return updatePage(updatedPage);
   }
 
   const updatePage = async (updatedPage: Page): Promise<void> => {
@@ -157,13 +104,13 @@ function EditPage(props: EditPageProps) {
           <Tabs.Tab value='Text Sections'>Text Sections</Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value='Properties'>
-          <EditProperties properties={page.properties} update={handleAddEditProperty} delete={handleDeleteProperty} />
+          <EditProperties properties={page.properties} update={updateProperties} />
         </Tabs.Panel>
         <Tabs.Panel value='Information'>
-          <EditPageTextItems textItems={page.text} update={handleAddEditTextItem} delete={handleDeleteTextItemVersion} />
+          <EditPageTextItems textItems={page.text} update={updateTextItems} />
         </Tabs.Panel>
         <Tabs.Panel value='Text Sections'>
-          <EditTextSections textSections={page.textSections} update={handleAddEditTextSection} delete={handleDeleteTextSection} />
+          <EditTextSections textSections={page.textSections} update={updateTextSections} />
         </Tabs.Panel>
       </Tabs>
     </>
