@@ -79,7 +79,7 @@ function EditTextSections(props: EditTextSectionsProps) {
     
   return (
     <>
-      <Modal opened={isModelOpen} onClose={close} title='Add Text Section' centered>
+      <Modal opened={isModelOpen} onClose={close} size='lg' title='Add Text Section' centered>
         <TextItemForm handleSubmit={handleAddTextSection} />
       </Modal>
 

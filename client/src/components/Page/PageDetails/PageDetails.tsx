@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react'
-import { useAppSelector } from '../../store/hooks';
+import { useAppSelector } from '../../../store/hooks';
 import { Link } from '@tanstack/react-router';
-import { PageDetails } from '../../types/PageTypes';
+import { PageDetails } from '../../../types/PageTypes';
 import { IconEdit } from '@tabler/icons-react';
 import { Button, Card, Collapse, Flex, Group, Text } from '@mantine/core';
+import TextItem from './TextItem';
 
 interface PageDetailsProps {
   pageId: string;
@@ -55,8 +56,8 @@ function PageDetailsComponent(props: PageDetailsProps) {
             </Group>
           </Card.Section>
           <Card.Section style={{ padding: '2em' }}>
-            { (page.properties ?? []).map((property) => (
-              <p><b>{ property.property }</b>: { property.value }</p>
+            { (page.properties ?? []).map((property, index) => (
+              <p key={index}><b>{ property.property }</b>: <TextItem text={ property.value } /></p>
             )) }
           </Card.Section>
         </Card>
@@ -68,7 +69,7 @@ function PageDetailsComponent(props: PageDetailsProps) {
               </Group>
             </Card.Section>
             <Card.Section style={{ padding: '2em' }}>
-              { page.text.map((textLine, idx) => <p key={idx}>{ textLine }</p>) }
+              { page.text.map((textLine, idx) => <p key={idx}><TextItem text={ textLine } /></p>) }
             </Card.Section>
           </Card>
           <Card radius='sm' withBorder style={{ margin: '1em' }}>
@@ -76,7 +77,7 @@ function PageDetailsComponent(props: PageDetailsProps) {
               <Card.Section withBorder key={idx} style={{ padding: '2em' }}>
                 <h3><Button onClick={() => toggleOpenSection(idx)}>{ section.title }</Button></h3>
                 <Collapse in={openSections.includes(idx)}>
-                  { section.text.map((textLine, idx) => <p key={idx}>{ textLine }</p>) }
+                  { section.text.map((textLine, idx) => <p key={idx}><TextItem text={ textLine } /></p>) }
                 </Collapse>
               </Card.Section>
             )) }

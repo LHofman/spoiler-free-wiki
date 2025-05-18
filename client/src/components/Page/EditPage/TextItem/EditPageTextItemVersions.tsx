@@ -4,6 +4,7 @@ import EditableList from '../../../Shared/Edit/EditableList';
 import { Fragment, ReactNode } from 'react';
 import { Card } from '@mantine/core';
 import { sortTextItemsCompareFn } from '../../../../utils/textItemUtils';
+import TextItemComponent from '../../PageDetails/TextItem';
 
 interface EditPageTextItemVersionsProps {
   textItemVersions: TextItem[];
@@ -63,7 +64,7 @@ function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
           items={props.textItemVersions}
           renderItem={ (textItem: TextItem, index: number, icons: ReactNode) => (
             <Fragment key={index}>
-              {textItem.text} (S{textItem.season} E{textItem.episode})
+              <TextItemComponent text={textItem.text} /> (S{textItem.season} E{textItem.episode})
               {icons}
               <br /><br />
             </Fragment>

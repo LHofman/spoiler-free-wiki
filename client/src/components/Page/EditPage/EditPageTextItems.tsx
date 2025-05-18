@@ -46,7 +46,7 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
    
   return (
     <>
-      <Modal opened={isModelOpen} onClose={close} title='Add Text Version' centered>
+      <Modal opened={isModelOpen} onClose={close} size='lg' title='Add Text Version' centered>
         <TextItemForm handleSubmit={submitAddNewTextItem} />
       </Modal>
 

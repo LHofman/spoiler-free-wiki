@@ -80,7 +80,7 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
         confirmAction={submitDelete}
         cancelAction={closeConfirmationModel} />
 
-      <Modal opened={isModelOpen} onClose={closeModel} title={`Add ${props.itemName}`} centered>
+      <Modal opened={isModelOpen} onClose={closeModel} size='lg' title={`Add ${props.itemName}`} centered>
         { React.createElement(props.formComponent, { handleSubmit: submitAddEditItem, initialValues: editModelInitialValues }) }
       </Modal>
 
