@@ -3,6 +3,7 @@ import EditPageTextItemVersions from '../TextItem/EditPageTextItemVersions';
 import PropertyForm from './PropertyForm';
 import EditableList from '../../../Shared/Edit/EditableList';
 import { Fragment, ReactNode } from 'react';
+import { sortTextItemsCompareFn } from '../../../../utils/textItemUtils';
 
 interface EditPropertiesProps {
   properties: Property[];
@@ -18,6 +19,8 @@ function EditProperties(props: EditPropertiesProps) {
     } else {
       updatedProperty.value[textItemVersionIndex] = textItem;
     }
+
+    updatedProperty.value.sort(sortTextItemsCompareFn);
 
     props.update(propertyIndex, updatedProperty);
   };

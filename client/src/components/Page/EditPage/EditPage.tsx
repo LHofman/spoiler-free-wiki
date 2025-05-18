@@ -10,6 +10,7 @@ import { Page, Property, TextItem, TextSection } from '../../../types/PageTypes'
 import EditProperties from './Properties/EditProperties';
 import EditTextSections from './TextSections/EditTextSections';
 import ClickableIcon from '../../Shared/ClickableIcon';
+import { sortTextItemsCompareFn } from '../../../utils/textItemUtils';
 
 interface EditPage {
   title: string;
@@ -62,6 +63,8 @@ function EditPage(props: EditPageProps) {
     } else {
       updatedPage.text[textItemIndex][textItemVersionIndex] = textItem;
     }
+
+    updatedPage.text[textItemIndex].sort(sortTextItemsCompareFn);
 
     updatePage(updatedPage);
   };

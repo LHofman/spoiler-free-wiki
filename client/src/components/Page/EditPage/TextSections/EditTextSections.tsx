@@ -6,6 +6,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { Modal, Tabs } from '@mantine/core';
 import TextItemForm from '../TextItem/TextItemForm';
 import { getLastItem } from '../../../../utils/arrayUtils';
+import { sortTextItemsCompareFn } from '../../../../utils/textItemUtils';
 
 interface EditTextSectionsProps {
   textSections: TextSection[];
@@ -35,6 +36,8 @@ function EditTextSections(props: EditTextSectionsProps) {
     } else {
       updatedTextSection.title[titleIndex] = title;
     }
+
+    updatedTextSection.title.sort(sortTextItemsCompareFn);
 
     props.update(textSectionIndex, updatedTextSection);
   };
@@ -69,6 +72,8 @@ function EditTextSections(props: EditTextSectionsProps) {
     } else {
       updatedTextSection.text[textItemIndex][textItemVersionIndex] = textItem;
     }
+
+    updatedTextSection.text[textItemIndex].sort(sortTextItemsCompareFn);
 
     props.update(textSectionIndex, updatedTextSection);
   }
