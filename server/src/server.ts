@@ -2,6 +2,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import mongoose from 'mongoose';
+import menusRoutes from './Infrastructure/Incoming/Route/menus';
 import pagesRoutes from './Infrastructure/Incoming/Route/pages';
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.get('/health', (_req: Request, res: Response) => {
   res.status(200).send('Server is running');
 });
 
+app.use('/api/menus', menusRoutes);
 app.use('/api/pages', pagesRoutes);
 
 const PORT: string | number = process.env.PORT || 3000;

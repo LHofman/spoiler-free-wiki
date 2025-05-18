@@ -8,6 +8,7 @@ import './index.css';
 import './App.css';
 import { routeTree } from './routeTree.gen';
 import { store } from './store/store.ts';
+import NavBar from './components/NavBar.tsx';
 
 
 const router = createRouter({ routeTree });
@@ -24,6 +25,7 @@ if (!rootElement.innerHTML) {
     <StrictMode>
       <Provider store={store}>
         <MantineProvider defaultColorScheme="dark">
+          <NavBar />
           <RouterProvider router={router} />
         </MantineProvider>
       </Provider>

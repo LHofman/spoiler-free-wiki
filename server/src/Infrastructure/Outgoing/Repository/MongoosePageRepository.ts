@@ -62,6 +62,23 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
 
     return page;
   }
+  
+  getNamesByIds = async (
+    ids: string[],
+    season: number,
+    episode: number
+  ): Promise<Map<string, string | null>> => {
+    const pages = await Page.find({ _id: { $in: ids } });
+    const pageMap = new Map<string, string | null>();
+
+    for (const page of pages) {
+      const titleItemVersions = new TextItemVersions(page.title.map(this.mapTextItemToValueObject));
+      const title = titleItemVersions.getSpoilerFreeText(season, episode);
+      pageMap.set(page._id.toString(), title);
+    }
+
+    return pageMap;
+  }
 
   add = async (body: {
     _id: mongoose.Types.ObjectId,

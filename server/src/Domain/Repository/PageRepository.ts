@@ -9,6 +9,8 @@ export default interface PageRepository {
   findById(id: string): Promise<PageAggregate>;
 
   findRawById(id: string): Promise<IPageDoc>;
+
+  getNamesByIds(ids: string[], season: number, episode: number): Promise<Map<string, string | null>>;
   
   add(body: {
     _id: mongoose.Types.ObjectId,
