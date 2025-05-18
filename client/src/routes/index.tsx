@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import PageList from '../components/PageList';
+import Slider from '../components/Slider';
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
@@ -7,6 +8,10 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   return (
-    <PageList />
+    <>
+      <Slider />
+      <br /><br />
+      <PageList />
+    </>
   );
 }

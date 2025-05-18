@@ -3,7 +3,11 @@ import PageRepository from '../../Domain/Repository/PageRepository';
 
 interface AddPageProps {
   _id: mongoose.Types.ObjectId,
-  title: string;
+  title: {
+    text: string,
+    season: number,
+    episode: number,
+  };
 }
 
 export default class AddPage {
@@ -12,8 +16,8 @@ export default class AddPage {
   ) {}
 
   add = async (props: AddPageProps): Promise<void> => {
-    if (props.title.trim() === '') throw new Error('Page title cannot be empty');
+    if (props.title.text.trim() === '') throw new Error('Page title cannot be empty');
 
-    await this.pageRepository.add(props);
+    await this.pageRepository.add({ _id: props._id, title: [props.title] });
   }
 }

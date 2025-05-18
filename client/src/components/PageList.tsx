@@ -2,22 +2,22 @@ import { Button, Modal } from '@mantine/core';
 import { Link } from '@tanstack/react-router';
 import axios from 'axios';
 import { Fragment, useEffect, useState } from 'react';
-import PageForm from './Page/EditPage/PageForm';
 import { useDisclosure } from '@mantine/hooks';
 import { IconTrash } from '@tabler/icons-react';
 import ConfirmationModel from './Shared/ConfirmationModel';
 import ClickableIcon from './Shared/ClickableIcon';
+import { useAppSelector } from '../store/hooks';
+import TextItemForm from './Page/EditPage/TextItem/TextItemForm';
+import { TextItem } from '../types/PageTypes';
 
 type PageList = {
-  _id: string;
+  id: string;
   title: string;
   canDelete: boolean;
 }[];
-interface AddPage {
-  title: string;
-}
 
 function PageList() {
+  const progress = useAppSelector((state) => state.progress);
   const [isModelOpen, { open: openModel, close }] = useDisclosure(false);
   const [isConfirmationModelOpen, { open: openConfirmationModel, close: closeConfirmationModel }] = useDisclosure(false);
   const [currentPageId, setCurrentPageId] = useState<string|null>(null);
@@ -26,7 +26,7 @@ function PageList() {
   useEffect(() => {
     const fetchPage = async () => {
       try {
-        const response = await axios.get<PageList>('http://localhost:3000/api/pages');
+        const response = await axios.get<PageList>(`http://localhost:3000/api/pages/list/${progress.season}/${progress.episode}`);
         console.log("Fetched page list:", response.data);
         setPageList(response.data);
       } catch (error) {
@@ -34,13 +34,13 @@ function PageList() {
       }
     };
     fetchPage();
-  }, []);
+  }, [progress]);
 
   const openAddPageModel = () => {
     openModel();
   }
 
-  const handleAddPage = async (values: AddPage) => {
+  const handleAddPage = async (values: TextItem) => {
     try {
       const response = await axios.post('http://localhost:3000/api/pages', values);
       console.log('Added Page:', response.data);
@@ -63,7 +63,7 @@ function PageList() {
       const response = await axios.delete(`http://localhost:3000/api/pages/${currentPageId}`);
       console.log('Deleted Page:', response.data);
 
-      setPageList((pageList ?? []).filter((page) => page._id !== currentPageId));
+      setPageList((pageList ?? []).filter((page) => page.id !== currentPageId));
     } catch (error) {
       console.error('Error deleting page:', error);
     }
@@ -78,13 +78,13 @@ function PageList() {
     <>
       <ConfirmationModel isOpen={isConfirmationModelOpen} action='delete this text' confirmAction={submitDelete} cancelAction={closeConfirmationModel} />
       <Modal opened={isModelOpen} onClose={close} title='Edit' centered>
-        <PageForm handleSubmit={handleAddPage} />
+        <TextItemForm handleSubmit={handleAddPage} />
       </Modal>
       { pageList && pageList.map((page) => (
-        <Fragment key={page._id}>
-          <Link to={`/pages/$pageId`} params={{ pageId: page._id }}>{ page.title }</Link>
+        <Fragment key={page.id}>
+          <Link to={`/pages/$pageId`} params={{ pageId: page.id }}>{ page.title }</Link>
           { page.canDelete && (
-            <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(page._id) }} />
+            <ClickableIcon icon={IconTrash} color='salmon' onClick={() => { openDeleteModel(page.id) }} />
           ) }
           <br />
         </Fragment>

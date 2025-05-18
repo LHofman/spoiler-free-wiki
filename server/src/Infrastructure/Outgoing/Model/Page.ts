@@ -4,7 +4,7 @@ import TextSectionSchema, { ITextSectionSchemaDoc } from './TextSectionSchema';
 
 export interface IPageDoc extends Document {
   _id: string;
-  title: string;
+  title: ITextItemSchemaDoc[];
   text: ITextItemSchemaDoc[][];
   properties: {
     property: string;
@@ -14,7 +14,7 @@ export interface IPageDoc extends Document {
 }
 
 const PageSchema = new mongoose.Schema({
-  title: { type: String, required: true },
+  title: [TextItemSchema],
   properties: [{
     property: String,
     value: [TextItemSchema]

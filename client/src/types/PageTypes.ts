@@ -14,7 +14,7 @@ export interface PageDetails {
 
 export interface Page {
   _id: string;
-  title: string;
+  title: TextItem[];
   properties: Property[];
   text: TextItem[][];
   textSections: TextSection[];

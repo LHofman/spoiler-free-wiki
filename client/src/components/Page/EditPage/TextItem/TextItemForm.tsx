@@ -6,6 +6,7 @@ import { IconLinkPlus } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import PageList from '../../../PageList';
+import { useAppSelector } from '../../../../store/hooks';
 
 interface TextItemProps {
   handleSubmit: (values: TextItem) => void;
@@ -13,6 +14,7 @@ interface TextItemProps {
 }
 
 function TextItemForm(props: TextItemProps) {
+  const progress = useAppSelector((state) => state.progress);
   const [isLinkModelOpen, { open: openLinkModel, close: closeLinkModel }] = useDisclosure(false);
   const [allPages, setAllPages] = useState<{ value: string, label: string }[]>([]);
   const [cursorPosition, setCursorPosition] = useState<number[]>([0, 0]);
@@ -51,9 +53,9 @@ function TextItemForm(props: TextItemProps) {
     }
 
     try {
-      const response = await axios.get<PageList>('http://localhost:3000/api/pages');
+      const response = await axios.get<PageList>(`http://localhost:3000/api/pages/${progress.season}/${progress.episode}`);
       
-      const pages = response.data.map((page) => ({ value: page._id, label: page.title }));
+      const pages = response.data.map((page) => ({ value: page.id, label: page.title }));
       setAllPages(pages);
 
       prefillLinkTextWithSelection();

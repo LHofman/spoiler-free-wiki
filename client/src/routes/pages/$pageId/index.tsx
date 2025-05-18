@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import Slider from '../../../components/Slider';
 import PageDetails from '../../../components/Page/PageDetails/PageDetails';
+import Slider from '../../../components/Slider';
 
 export const Route = createFileRoute('/pages/$pageId/')({
   component: RouteComponent,
