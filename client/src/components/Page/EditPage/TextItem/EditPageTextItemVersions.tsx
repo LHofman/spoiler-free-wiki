@@ -11,6 +11,7 @@ interface EditPageTextItemVersionsProps {
   update: (updatedTextItemVersions: TextItem[]) => Promise<void>;
   canDelete?: (textItemVersion: TextItem) => boolean;
   delete?: () => Promise<void>;
+  allowLink?: boolean;
 }
 
 function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
@@ -70,6 +71,7 @@ function EditPageTextItemVersions(props: EditPageTextItemVersionsProps) {
             </Fragment>
           ) }
           formComponent={TextItemForm}
+          formComponentExtraProps={{ allowLink: props.allowLink }}
           update={ (index: number, updatedItem: TextItem) => submitAddEditTextItem(index, updatedItem) }
           canDelete={props.canDelete ?? undefined}
           delete={handleDeleteTextItemVersion} />

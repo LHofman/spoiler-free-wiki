@@ -16,6 +16,7 @@ interface EditableListProps<I, IF extends ItemForm<I>> {
   items: I[];
   renderItem: (item: I, index: number, icons: ReactNode) => ReactNode;
   formComponent: IF;
+  formComponentExtraProps?: Omit<React.ComponentProps<IF>, 'handleSubmit' | 'initialValues'>;
   update: (index: number, updatedItem: I) => Promise<boolean>;
   canDelete?: (item: I) => boolean;
   delete: (index: number) => void;
@@ -81,7 +82,11 @@ function EditableList<I, IF extends ItemForm<I>>(props: EditableListProps<I, IF>
         cancelAction={closeConfirmationModel} />
 
       <Modal opened={isModelOpen} onClose={closeModel} size='lg' title={`Add ${props.itemName}`} centered>
-        { React.createElement(props.formComponent, { handleSubmit: submitAddEditItem, initialValues: editModelInitialValues }) }
+        { React.createElement(props.formComponent, {
+          handleSubmit: submitAddEditItem,
+          initialValues: editModelInitialValues,
+          ...props.formComponentExtraProps,
+        }) }
       </Modal>
 
       {

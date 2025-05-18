@@ -11,6 +11,7 @@ import { useAppSelector } from '../../../../store/hooks';
 interface TextItemProps {
   handleSubmit: (values: TextItem) => void;
   initialValues?: TextItem;
+  allowLink?: boolean;
 }
 
 function TextItemForm(props: TextItemProps) {
@@ -117,7 +118,7 @@ function TextItemForm(props: TextItemProps) {
         <NumberInput key={form.key('episode')} {...form.getInputProps('episode')} label="Episode" min={0} />
         <Textarea key={form.key('text')} {...form.getInputProps('text')} label="Text" autosize minRows={2} placeholder="Enter text"
           onBlur={saveCursorPosition}/>
-        <ActionIcon variant='transparent' onClick={openLinkForm}><IconLinkPlus /></ActionIcon>
+        { props.allowLink && <ActionIcon variant='transparent' onClick={openLinkForm}><IconLinkPlus /></ActionIcon> }
         <br /><br />
         <Button type='submit'>Submit</Button>
       </form>

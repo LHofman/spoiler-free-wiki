@@ -47,7 +47,7 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
   return (
     <>
       <Modal opened={isModelOpen} onClose={close} size='lg' title='Add Text Version' centered>
-        <TextItemForm handleSubmit={submitAddNewTextItem} />
+        <TextItemForm handleSubmit={submitAddNewTextItem} allowLink={true} />
       </Modal>
 
       <h2>Text Items</h2>
@@ -60,7 +60,8 @@ function EditPageTextItems(props: EditPageTextItemsProps) {
           key={itemIndex}
           textItemVersions={textItemVersions}
           update={ (updatedTextItemVersions: TextItem[]) => updateTextItemVersions(itemIndex, updatedTextItemVersions) }
-          delete={ () => deleteTextItemVersions(itemIndex) } />
+          delete={ () => deleteTextItemVersions(itemIndex) }
+          allowLink={true} />
       )} />
     <br />
     <Button variant='filled' onClick={open}>Add New Text Item</Button>

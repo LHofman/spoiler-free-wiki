@@ -71,7 +71,8 @@ function EditProperties(props: EditPropertiesProps) {
             <Card.Section style={{marginBottom: '0px'}}>
               <EditPageTextItemVersions
                 textItemVersions={property.value}
-                update={ (updatedTextItemVersions) => handleAddEditTextItemVersion(index, updatedTextItemVersions) }  />
+                update={ (updatedTextItemVersions) => handleAddEditTextItemVersion(index, updatedTextItemVersions) }
+                allowLink={true} />
             </Card.Section>
           </Card>
         ) }
