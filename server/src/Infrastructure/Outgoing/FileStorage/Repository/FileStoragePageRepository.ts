@@ -12,12 +12,15 @@ import PageListItem from '../../../../Domain/ValueObject/PageListItem';
 import type { IPageRaw, ITextItemSchemaRaw } from '../../types';
 
 const dataFilePath = path.resolve(__dirname, '../Data/pages.json');
+const historyFilePath = path.resolve(__dirname, '../Data/history.json');
 
 export default class FileStoragePageRepository implements PageRepository {
   private pages: IPageRaw[];
+  private history: object[];
     
   constructor() {
     this.pages = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
+    this.history = JSON.parse(fs.readFileSync(historyFilePath, 'utf-8'));
   }
 
   generateId(): string {
@@ -91,8 +94,31 @@ export default class FileStoragePageRepository implements PageRepository {
     id: string,
     title: { text: string, season: number, episode: number }[],
   }): Promise<void> => {
-    this.pages.push({ _id: body.id, title: body.title, text: [], properties: [], textSections: [] });
-    this.saveToFile();
+    const newPageDataWithDefaults = {
+      title: body.title,
+      text: [],
+      properties: [],
+      textSections: [],
+    };
+
+    this.pages.push({ _id: body.id, ...newPageDataWithDefaults });
+    this.saveToPagesFile();
+
+    const historyEntry = {
+      'id': this.generateId(),
+      'modelType': 'Page',
+      'modelId': body.id,
+      'timestamp': new Date().toISOString(),
+      'changes': [
+        {
+          'type': 'create',
+          'data': newPageDataWithDefaults,
+        }
+      ]
+    }
+
+    this.history.push(historyEntry);
+    this.saveToHistoryFile();
   }
 
   update = async (id: string, body: IPageRaw): Promise<void> => {
@@ -102,7 +128,25 @@ export default class FileStoragePageRepository implements PageRepository {
     }
 
     this.pages[pageIndex] = { ...this.pages[pageIndex], ...body };
-    this.saveToFile();
+    this.saveToPagesFile();
+
+    const { _id, ...otherUpdatedData } = body;
+
+    const historyEntry = {
+      'id': this.generateId(),
+      'modelType': 'Page',
+      'modelId': id,
+      'timestamp': new Date().toISOString(),
+      'changes': [
+        {
+          'type': 'update',
+          'data': otherUpdatedData,
+        }
+      ]
+    }
+
+    this.history.push(historyEntry);
+    this.saveToHistoryFile();
   }
 
   delete = async (id: string): Promise<void> => {
@@ -112,10 +156,14 @@ export default class FileStoragePageRepository implements PageRepository {
     }
 
     this.pages.splice(pageIndex, 1);
-    this.saveToFile();
+    this.saveToPagesFile();
   }
 
-  private saveToFile = (): void => {
+  private saveToPagesFile = (): void => {
     fs.writeFileSync(dataFilePath, JSON.stringify(this.pages, null, 2), 'utf-8');
+  }
+  
+  private saveToHistoryFile = (): void => {
+    fs.writeFileSync(historyFilePath, JSON.stringify(this.history, null, 2), 'utf-8');
   }
 }

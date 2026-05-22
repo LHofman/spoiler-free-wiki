@@ -5,17 +5,16 @@
     "items": [{
       "type": "subMenu",
       "name": "Characters",
-      "pageId": "mocksubmenuid",
       "items": [
         {
           "type": "page",
           "name": "Hannibal Lector",
-          "pageId": "mockpageidhannibal"
+          "pageId": "mockid-ejsdk24ojha"
         },
         {
           "type": "page",
           "name": "Will Graham",
-          "pageId": "mockpageidwill"
+          "pageId": "mockid-avk4ebpyr9j"
         }
       ]
     }]

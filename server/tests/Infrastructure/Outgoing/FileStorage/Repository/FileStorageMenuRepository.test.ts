@@ -6,7 +6,7 @@ import { getMockData, mockDataFiles } from './Utils/mockDataFile';
 import MenuAggregate from '../../../../../src/Domain/Aggregate/MenuAggregate';
 import MenuItem from '../../../../../src/Domain/ValueObject/MenuItem';
 
-const mockMenuData = [
+const mockMenuData: object[] = [
   {
     _id: 'menu1',
     name: 'Main Menu',
@@ -16,10 +16,11 @@ const mockMenuData = [
     ],
   },
 ];
-const mockPageData = [
+const mockPageData: object[] = [
   { _id: 'page1', title: [ { 'text': 'Page 1', season: 0, episode: 0 } ] },
   { _id: 'page2', title: [ { 'text': 'Page 2', season: 0, episode: 0 } ] },
 ];
+const mockHistoryData: object[] = [];
 
 describe('FileStorageMenuRepository', () => {
   let fileStorageMenuRepository: FileStorageMenuRepository;
@@ -27,6 +28,7 @@ describe('FileStorageMenuRepository', () => {
   mockDataFiles({
     'menus.json': mockMenuData,
     'pages.json': mockPageData,
+    'history.json': mockHistoryData,
   });
   
   before(() => {

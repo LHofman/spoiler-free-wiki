@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { before, describe, it } from 'node:test';
+import { beforeEach, describe, it } from 'node:test';
 import FileStoragePageRepository from '../../../../../src/Infrastructure/Outgoing/FileStorage/Repository/FileStoragePageRepository';
 import { getMockData, mockDataFiles } from './Utils/mockDataFile';
 import PageListAggregate from '../../../../../src/Domain/Aggregate/PageListAggregate';
@@ -10,7 +10,7 @@ import PageAggregate from '../../../../../src/Domain/Aggregate/PageAggregate';
 import PageProperty from '../../../../../src/Domain/ValueObject/PageProperty';
 import TextSection from '../../../../../src/Domain/ValueObject/TextSection';
 
-const mockPageData = [
+const mockPageData: object[] = [
   {
     _id: 'page1',
     title: [ { 'text': 'Page 1', season: 0, episode: 0 } ],
@@ -43,15 +43,17 @@ const mockPageData = [
     textSections: [],
   },
 ];
+const mockHistoryData: object[] = [];
 
 describe('FileStorageMenuRepository', () => {
   let fileStoragePageRepository: FileStoragePageRepository;
   
   mockDataFiles({
     'pages.json': mockPageData,
+    'history.json': mockHistoryData,
   });
   
-  before(() => {
+  beforeEach(() => {
     fileStoragePageRepository = new FileStoragePageRepository();
   });
 
@@ -170,6 +172,35 @@ describe('FileStorageMenuRepository', () => {
 
       assert.deepEqual(updatedFile, expected);
     });
+
+    it('should save the new page in the history', async () => {
+      const newPageData = {
+        id: 'page3',
+        title: [ { 'text': 'Page 3', season: 0, episode: 0 } ],
+      };
+      await fileStoragePageRepository.add(newPageData);
+
+      const historyData = getMockData('history.json');
+
+      const expectedHistoryEntry = {
+        'modelType': 'Page',
+        'modelId': 'page3',
+        'changes': [
+          {
+            'type': 'create',
+            'data': {
+              title: [ { 'text': 'Page 3', season: 0, episode: 0 } ],
+              text: [],
+              properties: [],
+              textSections: [],
+            },
+          }
+        ]
+      };
+
+      assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      assertTimestamp(historyData[0].timestamp);
+    });
   });
 
   describe('update', () => {
@@ -185,11 +216,36 @@ describe('FileStorageMenuRepository', () => {
 
       const expected = [
         updatedPageData,
-        mockPageData[1],
-        { _id: 'page3', title: [ { 'text': 'Page 3', season: 0, episode: 0 } ], text: [], properties: [], textSections: [] },
+        ...mockPageData.slice(1),
       ];
 
       assert.deepEqual(updatedFile, expected);
+    });
+
+    it('should save the update in the history', async () => {
+      const updatedPageData = { _id: 'page1', title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ], text: [], properties: [], textSections: [] };
+      await fileStoragePageRepository.update('page1', updatedPageData);
+
+      const historyData = getMockData('history.json');
+
+      const expectedHistoryEntry = {
+        'modelType': 'Page',
+        'modelId': 'page1',
+        'changes': [
+          {
+            'type': 'update',
+            'data': {
+              title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ],
+              text: [],
+              properties: [],
+              textSections: [],
+            },
+          }
+        ]
+      };
+
+      assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      assertTimestamp(historyData[0].timestamp);
     });
   });
 
@@ -200,8 +256,7 @@ describe('FileStorageMenuRepository', () => {
       const updatedFile = getMockData('pages.json');
 
       const expected = [
-        mockPageData[1],
-        { _id: 'page3', title: [ { 'text': 'Page 3', season: 0, episode: 0 } ], text: [], properties: [], textSections: [] },
+        ...mockPageData.slice(1),
       ];
 
       assert.deepEqual(updatedFile, expected);
@@ -216,3 +271,24 @@ describe('FileStorageMenuRepository', () => {
     });
   });
 });
+
+const objectWithoutTimestamp = (obj: object): object => {
+  let objWithoutTimestamp = { ...obj };
+  if ('timestamp' in objWithoutTimestamp) delete objWithoutTimestamp.timestamp;
+  return objWithoutTimestamp;
+}
+
+const assertEqualWithoutId = (actual: object, expected: object) => {
+  let actualWithoutId = { ...actual };
+  if ('id' in actualWithoutId) delete actualWithoutId.id;
+
+  assert.deepEqual(actualWithoutId, expected);
+}
+
+const assertTimestamp = (timestampString: string) => {
+  const actualTimestamp = new Date(timestampString);
+  const now = new Date();
+  assert(actualTimestamp <= now, 'Timestamp should be in the past');
+  now.setSeconds(now.getSeconds() - 1);
+  assert(actualTimestamp > now, 'Timestamp should be within the last second');
+};

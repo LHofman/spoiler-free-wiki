@@ -1,36 +1,36 @@
 [
   {
-    "_id": "mockpageidhannibal",
+    "_id": "mockid-ejsdk24ojha",
     "title": [
       {
-        "text": "Hannibal Lector",
         "season": 0,
-        "episode": 0
+        "episode": 0,
+        "text": "Hannibal Lector"
       }
     ],
     "text": [
       [
         {
-          "text": "Dr. Hannibal Lecter is one of the two main protagonists (alongside [[mockpageidwill|Will Graham]]) of the NBC show Hannibal.",
           "season": 0,
-          "episode": 0
+          "episode": 0,
+          "text": "Dr. Hannibal Lecter is one of the two main protagonists (alongside [[mockpageidwill|Will Graham]]) of the NBC show Hannibal."
         }
       ],
       [
         {
-          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes.",
           "season": 0,
-          "episode": 0
+          "episode": 0,
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes."
         },
         {
-          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives.",
           "season": 1,
-          "episode": 3
+          "episode": 3,
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives."
         },
         {
-          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer known as the Chesapeake Ripper, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives.",
           "season": 2,
-          "episode": 5
+          "episode": 5,
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer known as the Chesapeake Ripper, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives."
         }
       ]
     ],
@@ -39,9 +39,9 @@
         "property": "Name",
         "value": [
           {
-            "text": "Hannibal Lector",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "Hannibal Lector"
           }
         ]
       },
@@ -49,14 +49,14 @@
         "property": "Age",
         "value": [
           {
-            "text": "44",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "44"
           },
           {
-            "text": "45",
             "season": 2,
-            "episode": 0
+            "episode": 0,
+            "text": "45"
           },
           {
             "season": 3,
@@ -70,24 +70,24 @@
       {
         "title": [
           {
-            "text": "History",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "History"
           }
         ],
         "text": [
           [
             {
-              "text": "Hannibal Lecter was born in Lithuania to Count Lecter, an aristocrat and Simonetta Sforza-Lecter.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "Hannibal Lecter was born in Lithuania to Count Lecter, an aristocrat and Simonetta Sforza-Lecter."
             }
           ],
           [
             {
-              "text": "At the age of 16, he was adopted by his uncle Robertus and his aunt, Lady Murasaki.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "At the age of 16, he was adopted by his uncle Robertus and his aunt, Lady Murasaki."
             }
           ]
         ]
@@ -95,24 +95,24 @@
       {
         "title": [
           {
-            "text": "Biography",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "Biography"
           }
         ],
         "text": [
           [
             {
-              "text": "Hannibal took a keen interest in Graham, whom he sensed to be similar minded.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "Hannibal took a keen interest in Graham, whom he sensed to be similar minded."
             }
           ],
           [
             {
-              "text": "Despite his homicidal nature, he appears to have a certain empathy for others on some occasions.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "Despite his homicidal nature, he appears to have a certain empathy for others on some occasions."
             }
           ]
         ]
@@ -120,27 +120,27 @@
     ]
   },
   {
-    "_id": "mockpageidwill",
+    "_id": "mockid-avk4ebpyr9j",
     "title": [
       {
-        "text": "Will Graham",
         "season": 0,
-        "episode": 0
+        "episode": 0,
+        "text": "Will Graham"
       }
     ],
     "text": [
       [
         {
-          "text": "Will Graham is one of the two main protagonists (alongside [[mockpageidhannibal|Hannibal Lecter]]) of NBC's Hannibal.",
           "season": 0,
-          "episode": 0
+          "episode": 0,
+          "text": "Will Graham is one of the two main protagonists (alongside [[mockpageidhannibal|Hannibal Lecter]]) of NBC's Hannibal."
         }
       ],
       [
         {
-          "text": "Will is a criminal profiler and hunter of serial killers, who has a unique ability he uses to identify and understand the killers he tracks.",
           "season": 0,
-          "episode": 0
+          "episode": 0,
+          "text": "Will is a criminal profiler and hunter of serial killers, who has a unique ability he uses to identify and understand the killers he tracks."
         }
       ]
     ],
@@ -149,9 +149,9 @@
         "property": "Name",
         "value": [
           {
-            "text": "Will Graham",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "Will Graham"
           }
         ]
       },
@@ -159,19 +159,19 @@
         "property": "Age",
         "value": [
           {
-            "text": "38",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "38"
           },
           {
-            "text": "39",
             "season": 2,
-            "episode": 0
+            "episode": 0,
+            "text": "39"
           },
           {
-            "text": "40",
             "season": 3,
-            "episode": 0
+            "episode": 0,
+            "text": "40"
           }
         ]
       }
@@ -180,17 +180,17 @@
       {
         "title": [
           {
-            "text": "Background",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "Background"
           }
         ],
         "text": [
           [
             {
-              "text": "Will is a former homicide detective who lost his job due to not being able to use his gun when necessary.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "Will is a former homicide detective who lost his job due to not being able to use his gun when necessary."
             }
           ]
         ]
@@ -198,17 +198,17 @@
       {
         "title": [
           {
-            "text": "Personality",
             "season": 0,
-            "episode": 0
+            "episode": 0,
+            "text": "Personality"
           }
         ],
         "text": [
           [
             {
-              "text": "Will is a deeply complex man. He describes himself as being on the autism spectrum, due to his social difficulties and lack of eye contact; however, it is contrasted by his sociopathic tendencies and his enjoyment of killing, which makes this statement questionable.",
               "season": 0,
-              "episode": 0
+              "episode": 0,
+              "text": "Will is a deeply complex man. He describes himself as being on the autism spectrum, due to his social difficulties and lack of eye contact; however, it is contrasted by his sociopathic tendencies and his enjoyment of killing, which makes this statement questionable."
             }
           ]
         ]
