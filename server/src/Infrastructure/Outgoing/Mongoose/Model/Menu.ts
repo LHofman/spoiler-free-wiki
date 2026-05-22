@@ -1,11 +1,11 @@
+import { ObjectId } from 'mongodb';
 import mongoose, { Document } from 'mongoose';
-
 export type MenuItemPage = { type: 'page'; pageId: string };
 export type MenuItemSubMenu = { type: 'subMenu'; name: string; items: IMenuItem[] };
 export type IMenuItem = MenuItemPage | MenuItemSubMenu;
 
 export interface IMenuDoc extends Document {
-  _id: string;
+  _id: ObjectId;
   name: string;
   items: IMenuItem[];
 }
@@ -20,6 +20,8 @@ const MenuItemSchema = new mongoose.Schema({
 const MenuSchema = new mongoose.Schema({
   name: { type: String, required: true },
   items: [{
+    _id: false,
+    type: { type: String, required: true, enum: ['page', 'subMenu'] },
     name: { type: String },
     pageId: { type: String },
     items: [MenuItemSchema],

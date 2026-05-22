@@ -1,9 +1,10 @@
+import { ObjectId } from 'mongodb';
 import mongoose, { Document } from 'mongoose';
 import TextItemSchema, { ITextItemSchemaDoc } from './TextItemSchema';
 import TextSectionSchema, { ITextSectionSchemaDoc } from './TextSectionSchema';
 
 export interface IPageDoc extends Document {
-  _id: string;
+  _id: ObjectId;
   title: ITextItemSchemaDoc[];
   text: ITextItemSchemaDoc[][];
   properties: {
@@ -16,6 +17,7 @@ export interface IPageDoc extends Document {
 const PageSchema = new mongoose.Schema({
   title: [TextItemSchema],
   properties: [{
+    _id: false,
     property: String,
     value: [TextItemSchema]
   }],

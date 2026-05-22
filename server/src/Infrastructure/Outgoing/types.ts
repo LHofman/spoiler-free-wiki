@@ -2,30 +2,30 @@ export type MenuItemPage = { type: 'page'; pageId: string };
 export type MenuItemSubMenu = { type: 'subMenu'; name: string; items: IMenuItem[] };
 export type IMenuItem = MenuItemPage | MenuItemSubMenu;
 
-export interface IMenuDoc {
+export interface IMenuRaw {
   _id: string;
   name: string;
   items: IMenuItem[];
 }
 
-export interface IPageDoc {
+export interface IPageRaw {
   _id: string;
-  title: ITextItemSchemaDoc[];
-  text: ITextItemSchemaDoc[][];
+  title: ITextItemSchemaRaw[];
+  text: ITextItemSchemaRaw[][];
   properties: {
     property: string;
-    value: ITextItemSchemaDoc[];
+    value: ITextItemSchemaRaw[];
   }[];
-  textSections: ITextSectionSchemaDoc[];
+  textSections: ITextSectionSchemaRaw[];
 }
 
-export interface ITextItemSchemaDoc {
+export interface ITextItemSchemaRaw {
   text: string;
   season: number;
   episode: number;
 }
 
-export interface ITextSectionSchemaDoc {
-  title: ITextItemSchemaDoc[];
-  text: ITextItemSchemaDoc[][];
+export interface ITextSectionSchemaRaw {
+  title: ITextItemSchemaRaw[];
+  text: ITextItemSchemaRaw[][];
 }

@@ -4,12 +4,12 @@ import MenuAggregate from '../../../../Domain/Aggregate/MenuAggregate';
 import MenuRepository from '../../../../Domain/Repository/MenuRepository';
 import PageRepository from '../../../../Domain/Repository/PageRepository';
 import MenuItem from '../../../../Domain/ValueObject/MenuItem';
-import type { IMenuDoc, IMenuItem } from '../../types';
+import type { IMenuRaw, IMenuItem } from '../../types';
 
 const dataFilePath = path.resolve(__dirname, '../Data/menus.json');
 
 export default class FileStorageMenuRepository implements MenuRepository {
-  private menus: IMenuDoc[];
+  private menus: IMenuRaw[];
 
   constructor(
     private pageRepository: PageRepository,
@@ -18,7 +18,7 @@ export default class FileStorageMenuRepository implements MenuRepository {
   }
 
   getMenuByName = async (name: string, season: number, episode: number): Promise<MenuAggregate> => {
-    const menu = this.menus.find((menu: IMenuDoc) => menu.name === name);
+    const menu = this.menus.find((menu: IMenuRaw) => menu.name === name);
     if (!menu) throw new Error('Menu not found');
 
     const allPageIds = this.getAllPageIds(menu.items);
@@ -58,14 +58,14 @@ export default class FileStorageMenuRepository implements MenuRepository {
     return transformedMenuItems;
   }
 
-  findRawByName(name: string): Promise<IMenuDoc> {
-    const menu = this.menus.find((menu: IMenuDoc) => menu.name === name);
+  findRawByName(name: string): Promise<IMenuRaw> {
+    const menu = this.menus.find((menu: IMenuRaw) => menu.name === name);
     if (!menu) throw new Error('Menu not found');
     return Promise.resolve(menu);
   }
 
-  update = async (id: string, body: IMenuDoc): Promise<void> => {
-    const menuIndex = this.menus.findIndex((menu: IMenuDoc) => menu._id === id);
+  update = async (id: string, body: IMenuRaw): Promise<void> => {
+    const menuIndex = this.menus.findIndex((menu: IMenuRaw) => menu._id === id);
     if (menuIndex === -1) {
       throw new Error('Menu not found');
     }

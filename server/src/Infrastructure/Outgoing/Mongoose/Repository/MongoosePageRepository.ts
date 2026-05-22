@@ -11,10 +11,11 @@ import { ITextItemSchemaDoc } from '../Model/TextItemSchema';
 import MongooseRepository from './MongooseRepository';
 import PageListAggregate from '../../../../Domain/Aggregate/PageListAggregate';
 import PageListItem from '../../../../Domain/ValueObject/PageListItem';
+import type { IPageRaw } from '../../types';
 
 export default class MongoosePageRepository extends MongooseRepository<IPageDoc> implements PageRepository {
   generateId(): string {
-    return new mongoose.Types.ObjectId().toString();
+    return new mongoose.Types.ObjectId().toHexString();
   }
 
   getList = async (): Promise<PageListAggregate> => {
@@ -22,7 +23,7 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
 
     return new PageListAggregate(
       pages.map((page: IPageDoc) => new PageListItem(
-        page._id,
+        page._id.toHexString(),
         new TextItemVersions(page.title.map(this.mapTextItemToValueObject)),
         (!page.text.length && !page.properties.length && !page.textSections.length),
       )),
@@ -57,14 +58,22 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
   private mapTextItemVersionsToValueObject = (textItemVersions: ITextItemSchemaDoc[]) =>
     new TextItemVersions(textItemVersions.map(this.mapTextItemToValueObject));
 
-  findRawById = async (id: string): Promise<IPageDoc> => {
+  findRawById = async (id: string): Promise<IPageRaw> => {
     const pageId = this.toObjectId(id);
     const page = await Page.findById(pageId);
     if (!page) {
       throw new DocumentNotFoundError('Page');
     }
 
-    return page;
+    const pageObject = page.toObject();
+
+    return {
+      _id: pageObject._id.toHexString(),
+      title: pageObject.title,
+      text: pageObject.text,
+      properties: pageObject.properties,
+      textSections: pageObject.textSections
+    };
   }
   
   getNamesByIds = async (
@@ -78,7 +87,7 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     for (const page of pages) {
       const titleItemVersions = new TextItemVersions(page.title.map(this.mapTextItemToValueObject));
       const title = titleItemVersions.getSpoilerFreeText(season, episode);
-      pageMap.set(page._id.toString(), title);
+      pageMap.set(page._id.toHexString(), title);
     }
 
     return pageMap;
@@ -92,7 +101,7 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     await Page.insertOne({ _id: this.toObjectId(id), title });
   }
 
-  update = async (id: string, body: IPageDoc): Promise<void> => {
+  update = async (id: string, body: IPageRaw): Promise<void> => {
     await Page.findByIdAndUpdate(this.toObjectId(id), body);
   }
 

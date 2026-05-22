@@ -1,7 +1,5 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import PageListAggregate from '../../../src/Domain/Aggregate/PageListAggregate';
-import PageListItem from '../../../src/Domain/ValueObject/PageListItem';
 import TextItemVersions from '../../../src/Domain/ValueObject/TextItemVersions';
 import TextItem from '../../../src/Domain/ValueObject/TextItem';
 import PageAggregate from '../../../src/Domain/Aggregate/PageAggregate';

@@ -2,6 +2,7 @@ import MenuAggregate from '../../../../Domain/Aggregate/MenuAggregate';
 import MenuRepository from '../../../../Domain/Repository/MenuRepository';
 import PageRepository from '../../../../Domain/Repository/PageRepository';
 import MenuItem from '../../../../Domain/ValueObject/MenuItem';
+import type { IMenuRaw } from '../../types';
 import Menu, { IMenuDoc, IMenuItem } from '../Model/Menu';
 import MongooseRepository from './MongooseRepository';
 
@@ -54,14 +55,14 @@ export default class MongooseMenuRepository extends MongooseRepository<IMenuDoc>
   }
     
 
-  findRawByName = async (name: string): Promise<IMenuDoc> => {
+  findRawByName = async (name: string): Promise<IMenuRaw> => {
     const menu = await Menu.findOne({ name });
     if (!menu) throw new Error('Menu not found');
 
-    return menu;
+    return { ...menu.toObject(), _id: menu._id.toString() };
   }
 
-  update = async (id: string, body: IMenuDoc): Promise<void> => {
+  update = async (id: string, body: IMenuRaw): Promise<void> => {
     await Menu.findByIdAndUpdate(id, body);
   }
 }

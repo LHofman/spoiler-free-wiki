@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import FileStoragePageRepository from '../../Infrastructure/Outgoing/FileStorage/Repository/FileStoragePageRepository';
 import MongoosePageRepository from '../../Infrastructure/Outgoing/Mongoose/Repository/MongoosePageRepository';
-import type { IPageDoc } from '../../Infrastructure/Outgoing/types';
+import type { IPageRaw } from '../../Infrastructure/Outgoing/types';
 import PageAggregate from '../Aggregate/PageAggregate';
 import PageListAggregate from '../Aggregate/PageListAggregate';
 
@@ -14,7 +14,7 @@ export default interface PageRepository {
 
   findById(id: string): Promise<PageAggregate>;
 
-  findRawById(id: string): Promise<IPageDoc>;
+  findRawById(id: string): Promise<IPageRaw>;
 
   getNamesByIds(ids: string[], season: number, episode: number): Promise<Map<string, string | null>>;
   
@@ -23,7 +23,7 @@ export default interface PageRepository {
     title: { text: string, season: number, episode: number }[],
   }): Promise<void>;
 
-  update(id: string, body: IPageDoc): Promise<void>;
+  update(id: string, body: IPageRaw): Promise<void>;
 
   delete(id: string): Promise<void>;
 }

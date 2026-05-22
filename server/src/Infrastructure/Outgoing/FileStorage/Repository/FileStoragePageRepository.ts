@@ -9,12 +9,12 @@ import TextItemVersions from '../../../../Domain/ValueObject/TextItemVersions';
 import TextSection from '../../../../Domain/ValueObject/TextSection';
 import PageListAggregate from '../../../../Domain/Aggregate/PageListAggregate';
 import PageListItem from '../../../../Domain/ValueObject/PageListItem';
-import type { IPageDoc, ITextItemSchemaDoc } from '../../types';
+import type { IPageRaw, ITextItemSchemaRaw } from '../../types';
 
 const dataFilePath = path.resolve(__dirname, '../Data/pages.json');
 
 export default class FileStoragePageRepository implements PageRepository {
-  private pages: IPageDoc[];
+  private pages: IPageRaw[];
     
   constructor() {
     this.pages = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
@@ -26,7 +26,7 @@ export default class FileStoragePageRepository implements PageRepository {
   
   getList = async (): Promise<PageListAggregate> => {
     return new PageListAggregate(
-      this.pages.map((page: IPageDoc) => new PageListItem(
+      this.pages.map((page: IPageRaw) => new PageListItem(
         page._id,
         new TextItemVersions(page.title.map(this.mapTextItemToValueObject)),
         (!page.text.length && !page.properties.length && !page.textSections.length),
@@ -35,7 +35,7 @@ export default class FileStoragePageRepository implements PageRepository {
   }
 
   findById = async (id: string): Promise<PageAggregate> => {
-    const page = this.pages.find((page: IPageDoc) => page._id === id);
+    const page = this.pages.find((page: IPageRaw) => page._id === id);
     if (!page) {
       throw new DocumentNotFoundError('Page');
     }
@@ -55,14 +55,14 @@ export default class FileStoragePageRepository implements PageRepository {
     );
   }
 
-  private mapTextItemToValueObject = ({text, season, episode}: ITextItemSchemaDoc) =>
+  private mapTextItemToValueObject = ({text, season, episode}: ITextItemSchemaRaw) =>
     new TextItem(text, season, episode);
 
-  private mapTextItemVersionsToValueObject = (textItemVersions: ITextItemSchemaDoc[]) =>
+  private mapTextItemVersionsToValueObject = (textItemVersions: ITextItemSchemaRaw[]) =>
     new TextItemVersions(textItemVersions.map(this.mapTextItemToValueObject));
 
-  findRawById = async (id: string): Promise<IPageDoc> => {
-    const page = this.pages.find((page: IPageDoc) => page._id === id);
+  findRawById = async (id: string): Promise<IPageRaw> => {
+    const page = this.pages.find((page: IPageRaw) => page._id === id);
     if (!page) {
       throw new DocumentNotFoundError('Page');
     }
@@ -75,7 +75,7 @@ export default class FileStoragePageRepository implements PageRepository {
     season: number,
     episode: number
   ): Promise<Map<string, string | null>> => {
-    const pages = this.pages.filter((page: IPageDoc) => ids.includes(page._id));
+    const pages = this.pages.filter((page: IPageRaw) => ids.includes(page._id));
     const pageMap = new Map<string, string | null>();
 
     for (const page of pages) {
@@ -95,8 +95,8 @@ export default class FileStoragePageRepository implements PageRepository {
     this.saveToFile();
   }
 
-  update = async (id: string, body: IPageDoc): Promise<void> => {
-    const pageIndex = this.pages.findIndex((page: IPageDoc) => page._id === id);
+  update = async (id: string, body: IPageRaw): Promise<void> => {
+    const pageIndex = this.pages.findIndex((page: IPageRaw) => page._id === id);
     if (pageIndex === -1) {
       throw new DocumentNotFoundError('Page');
     }
@@ -106,9 +106,9 @@ export default class FileStoragePageRepository implements PageRepository {
   }
 
   delete = async (id: string): Promise<void> => {
-    const pageIndex = this.pages.findIndex((page: IPageDoc) => page._id === id);
+    const pageIndex = this.pages.findIndex((page: IPageRaw) => page._id === id);
     if (pageIndex === -1) {
-      throw new DocumentNotFoundError('Page');
+      return;
     }
 
     this.pages.splice(pageIndex, 1);
