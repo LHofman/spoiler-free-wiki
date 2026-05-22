@@ -3,7 +3,11 @@
 ## Installation
 
 - Copy the .env.example file and fill in valid settings
-- Run `npm init` in the root, client, and server folder
+- Run `npm install` in the root, client, and server folder
+
+## Tests
+
+- Run `npm run test` in the server folder to run the tests
 
 ## Development
 
