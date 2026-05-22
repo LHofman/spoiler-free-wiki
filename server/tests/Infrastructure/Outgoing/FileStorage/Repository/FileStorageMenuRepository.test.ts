@@ -5,6 +5,7 @@ import FileStoragePageRepository from '../../../../../src/Infrastructure/Outgoin
 import { getMockData, mockDataFiles } from './Utils/mockDataFile';
 import MenuAggregate from '../../../../../src/Domain/Aggregate/MenuAggregate';
 import MenuItem from '../../../../../src/Domain/ValueObject/MenuItem';
+import { assertEqualWithoutId, assertTimestamp, objectWithoutTimestamp } from './Utils/historyUtils';
 
 const mockMenuData: object[] = [
   {
@@ -85,6 +86,29 @@ describe('FileStorageMenuRepository', () => {
       const updatedFile = getMockData('menus.json')[0];
 
       assert.deepEqual(updatedFile, expectedMenu);
+    });
+
+    it('should save diff in history', async () => {
+      const updatedData = { name: 'Updated Menu Name' };
+      await fileStorageMenuRepository.update('menu1', updatedData as any);
+
+      const historyData = getMockData('history.json');
+      
+      const expectedHistoryEntry = {
+        'modelType': 'Menu',
+        'modelId': 'menu1',
+        'changes': [
+          {
+            op: 'replace',
+            path: '/name',
+            value: 'Updated Menu Name',
+          },
+        ],
+      };
+
+      assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      // @ts-expect-error - timestamp exists at runtime
+      assertTimestamp(historyData[0].timestamp);
     });
   });
 });

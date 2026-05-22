@@ -190,6 +190,39 @@ describe('MongoosePageRepository', () => {
 
       assert.deepEqual(newData, expected);
     });
+
+    it('should save the new page in the history', async () => {
+      const newPageId = mongoosePageRepository.generateId();
+
+      const newPageData = {
+        id: newPageId,
+        title: [ { 'text': 'Page 3', season: 0, episode: 0 } ],
+      };
+      await mongoosePageRepository.add(newPageData);
+
+      const actual = await mongoose.connection.collection('histories').find({}).toArray();
+
+      const expected = {
+        'modelType': 'Page',
+        'modelId': 'page3',
+        'changes': [
+          {
+            op: 'add',
+            path: '/_id',
+            value: new mongoose.Types.ObjectId(newPageId),
+          },
+          {
+            op: 'add',
+            path: '/title',
+            value: [ { text: 'Page 3', season: 0, episode: 0 } ],
+          },
+        ],
+      };
+
+      assert.deepEqual(actual[0].modelType, 'Page');
+      assert.deepEqual(actual[0].modelId, new mongoose.Types.ObjectId(newPageId));
+      assert.deepEqual(actual[0].changes, expected.changes);
+    });
   });
 
   describe('update', () => {
@@ -212,6 +245,52 @@ describe('MongoosePageRepository', () => {
       };
 
       assert.deepEqual(newData, expected);
+    });
+
+    it('should save the update in the history', async () => {
+      const pageId = mockPageData[0]._id.toString();
+      const updatedPageData = {
+        _id: pageId,
+        title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ],
+        text: [],
+        properties: [],
+        textSections: []
+      };
+      await mongoosePageRepository.update(pageId, updatedPageData);
+
+      const actual = await mongoose.connection.collection('histories').find({}).toArray();
+
+      const expected = {
+        'modelType': 'Page',
+        'modelId': pageId,
+        'changes': [
+          {
+            op: 'replace',
+            path: '/title/0/text',
+            value: 'Updated Page 1',
+          },
+          {
+            op: 'remove',
+            path: '/text/0',
+          },
+          {
+            op: 'remove',
+            path: '/properties/0',
+          },
+          {
+            op: 'remove',
+            path: '/properties/0',
+          },
+          {
+            op: 'remove',
+            path: '/textSections/0',
+          },
+        ],
+      };
+
+      assert.deepEqual(actual[0].modelType, 'Page');
+      assert.deepEqual(actual[0].modelId, new mongoose.Types.ObjectId(pageId));
+      assert.deepEqual(actual[0].changes, expected.changes);
     });
   });
 
@@ -237,6 +316,23 @@ describe('MongoosePageRepository', () => {
       } catch (error: any) {
         assert.equal(error.message, 'Page not found');
       }
+    });
+
+    it('should save the deletion in the history', async () => {
+      const pageId = mockPageData[0]._id.toString();
+      await mongoosePageRepository.delete(pageId);
+
+      const actual = await mongoose.connection.collection('histories').find({}).toArray();
+
+      const expected = {
+        'modelType': 'Page',
+        'modelId': pageId,
+        'changes': 'Delete',
+      };
+
+      assert.deepEqual(actual[0].modelType, 'Page');
+      assert.deepEqual(actual[0].modelId, new mongoose.Types.ObjectId(pageId));
+      assert.deepEqual(actual[0].changes, expected.changes);
     });
   });
 });

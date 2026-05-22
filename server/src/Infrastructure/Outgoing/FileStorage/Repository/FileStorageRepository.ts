@@ -22,11 +22,11 @@ export default class FileStorageRepository {
     newData: object
   ): void => {
     const historyEntry = {
-      'id': this.generateId(),
-      'modelType': 'Page',
-      'modelId': id,
-      'timestamp': new Date().toISOString(),
-      'changes': createPatch(oldData, newData),
+      id: this.generateId(),
+      modelType,
+      modelId: id,
+      timestamp: new Date().toISOString(),
+      changes: createPatch(oldData, newData),
     }
 
     this.history.push(historyEntry);
@@ -44,7 +44,7 @@ export default class FileStorageRepository {
       'timestamp': new Date().toISOString(),
       'changes': 'Delete',
     };
-    
+
     this.history.push(historyEntry);
     fs.writeFileSync(historyFilePath, JSON.stringify(this.history, null, 2), 'utf-8');
   }

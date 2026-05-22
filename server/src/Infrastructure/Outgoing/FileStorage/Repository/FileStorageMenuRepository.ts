@@ -5,15 +5,17 @@ import MenuRepository from '../../../../Domain/Repository/MenuRepository';
 import PageRepository from '../../../../Domain/Repository/PageRepository';
 import MenuItem from '../../../../Domain/ValueObject/MenuItem';
 import type { IMenuRaw, IMenuItem } from '../../types';
+import FileStorageRepository from './FileStorageRepository';
 
 const dataFilePath = path.resolve(__dirname, '../Data/menus.json');
 
-export default class FileStorageMenuRepository implements MenuRepository {
+export default class FileStorageMenuRepository extends FileStorageRepository implements MenuRepository {
   private menus: IMenuRaw[];
 
   constructor(
     private pageRepository: PageRepository,
   ) {
+    super();
     this.menus = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
   }
 
@@ -70,8 +72,13 @@ export default class FileStorageMenuRepository implements MenuRepository {
       throw new Error('Menu not found');
     }
 
-    this.menus[menuIndex] = { ...this.menus[menuIndex], ...body };
+    const oldData = this.menus[menuIndex];
+    const newData = { ...oldData, ...body };
+
+    this.menus[menuIndex] = newData;
     this.saveToFile();
+
+    this.saveDiffInHistory('Menu', id, oldData, newData);
   }
 
   private saveToFile = (): void => {

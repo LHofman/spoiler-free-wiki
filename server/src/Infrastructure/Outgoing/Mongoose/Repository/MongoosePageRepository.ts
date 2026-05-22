@@ -98,14 +98,43 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
     title: { text: string, season: number, episode: number }[],
   }): Promise<void> => {
     const { id, title } = body;
-    await Page.insertOne({ _id: this.toObjectId(id), title });
+
+    const dataToSave = { _id: this.toObjectId(id), title };
+
+    await Page.insertOne(dataToSave);
+
+    await this.saveDiffInHistory(
+      'Page',
+      this.toObjectId(id),
+      {},
+      dataToSave,
+    );
   }
 
   update = async (id: string, body: IPageRaw): Promise<void> => {
+    const oldData = await Page.findById(this.toObjectId(id));
+    if (!oldData) {
+      throw new DocumentNotFoundError('Page');
+    }
+
     await Page.findByIdAndUpdate(this.toObjectId(id), body);
+
+    const newData = await Page.findById(this.toObjectId(id));
+
+    await this.saveDiffInHistory(
+      'Page',
+      this.toObjectId(id),
+      oldData.toObject(),
+      newData!.toObject(),
+    );
   }
 
   delete = async (id: string): Promise<void> => {
     await Page.findByIdAndDelete(this.toObjectId(id));
+
+    await this.saveDeleteInHistory(
+      'Page',
+      this.toObjectId(id),
+    );
   }
 }

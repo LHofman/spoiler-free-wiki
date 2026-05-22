@@ -63,6 +63,20 @@ export default class MongooseMenuRepository extends MongooseRepository<IMenuDoc>
   }
 
   update = async (id: string, body: IMenuRaw): Promise<void> => {
+    const oldData = await Menu.findById(this.toObjectId(id));
+    if (!oldData) {
+      throw new Error('Menu not found');
+    }
+
     await Menu.findByIdAndUpdate(id, body);
+
+    const newData = await Menu.findById(this.toObjectId(id));
+
+    await this.saveDiffInHistory(
+      'Menu',
+      this.toObjectId(id),
+      oldData.toObject(),
+      newData!.toObject(),
+    );
   }
 }

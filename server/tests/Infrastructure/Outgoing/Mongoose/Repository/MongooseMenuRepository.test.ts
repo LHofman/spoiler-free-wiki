@@ -131,5 +131,39 @@ describe('MongoosePageRepository', () => {
 
       assert.deepEqual(menu, expected);
     });
+
+    it('should save history on update', async () => {
+      const updatedData: IMenuRaw = {
+        _id: menuId.toHexString(),
+        name: 'Updated Menu',
+        items: [
+          { type: 'page', pageId: page1Id.toHexString() },
+        ],
+      };
+
+      await mongooseMenuRepository.update(menuId.toHexString(), updatedData);
+
+      const actual = await mongoose.connection.collection('histories').find({}).toArray();
+      
+      const expected = {
+        'modelType': 'Menu',
+        'modelId': menuId,
+        'changes': [
+          {
+            op: 'replace',
+            path: '/name',
+            value: 'Updated Menu',
+          },
+          {
+            op: 'remove',
+            path: '/items/1',
+          }
+        ],
+      };
+
+      assert.deepEqual(actual[0].modelType, 'Menu');
+      assert.deepEqual(actual[0].modelId, menuId);
+      assert.deepEqual(actual[0].changes, expected.changes);
+    });
   });
 });
