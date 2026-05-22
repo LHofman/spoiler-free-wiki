@@ -187,18 +187,35 @@ describe('FileStorageMenuRepository', () => {
         'modelId': 'page3',
         'changes': [
           {
-            'type': 'create',
-            'data': {
-              title: [ { 'text': 'Page 3', season: 0, episode: 0 } ],
-              text: [],
-              properties: [],
-              textSections: [],
-            },
-          }
-        ]
+            op: 'add',
+            path: '/_id',
+            value: 'page3',
+          },
+          {
+            op: 'add',
+            path: '/title',
+            value: [ { text: 'Page 3', season: 0, episode: 0 } ],
+          },
+          {
+            op: 'add',
+            path: '/text',
+            value: [],
+          },
+          {
+            op: 'add',
+            path: '/properties',
+            value: [],
+          },
+          {
+            op: 'add',
+            path: '/textSections',
+            value: [],
+          },
+        ],
       };
 
       assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      // @ts-expect-error - timestamp exists at runtime
       assertTimestamp(historyData[0].timestamp);
     });
   });
@@ -223,7 +240,12 @@ describe('FileStorageMenuRepository', () => {
     });
 
     it('should save the update in the history', async () => {
-      const updatedPageData = { _id: 'page1', title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ], text: [], properties: [], textSections: [] };
+      const updatedPageData = {
+        ...mockPageData[0],
+        title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ],
+        textSections: []
+      };
+      // @ts-expect-error
       await fileStoragePageRepository.update('page1', updatedPageData);
 
       const historyData = getMockData('history.json');
@@ -233,18 +255,19 @@ describe('FileStorageMenuRepository', () => {
         'modelId': 'page1',
         'changes': [
           {
-            'type': 'update',
-            'data': {
-              title: [ { 'text': 'Updated Page 1', season: 0, episode: 0 } ],
-              text: [],
-              properties: [],
-              textSections: [],
-            },
-          }
-        ]
+            op: 'replace',
+            path: '/title/0/text',
+            value: 'Updated Page 1',
+          },
+          {
+            op: 'remove',
+            path: '/textSections/0',
+          },
+        ],
       };
 
       assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      // @ts-expect-error - timestamp exists at runtime
       assertTimestamp(historyData[0].timestamp);
     });
   });
@@ -268,6 +291,22 @@ describe('FileStorageMenuRepository', () => {
       const updatedFile = getMockData('pages.json');
 
       assert.deepEqual(updatedFile, mockPageData);
+    });
+
+    it('should save the deletion in the history', async () => {
+      await fileStoragePageRepository.delete('page1');
+
+      const historyData = getMockData('history.json');
+
+      const expectedHistoryEntry = {
+        'modelType': 'Page',
+        'modelId': 'page1',
+        'changes': 'Delete',
+      };
+
+      assertEqualWithoutId(objectWithoutTimestamp(historyData[0]), expectedHistoryEntry);
+      // @ts-expect-error - timestamp exists at runtime
+      assertTimestamp(historyData[0].timestamp);
     });
   });
 });

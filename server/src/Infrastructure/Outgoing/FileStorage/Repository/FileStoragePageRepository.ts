@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { createPatch } from 'rfc6902';
 import PageAggregate from '../../../../Domain/Aggregate/PageAggregate';
 import DocumentNotFoundError from '../../../../Domain/Error/DocumentNotFoundError';
 import PageRepository from '../../../../Domain/Repository/PageRepository';
@@ -10,23 +11,19 @@ import TextSection from '../../../../Domain/ValueObject/TextSection';
 import PageListAggregate from '../../../../Domain/Aggregate/PageListAggregate';
 import PageListItem from '../../../../Domain/ValueObject/PageListItem';
 import type { IPageRaw, ITextItemSchemaRaw } from '../../types';
+import FileStorageRepository from './FileStorageRepository';
 
 const dataFilePath = path.resolve(__dirname, '../Data/pages.json');
 const historyFilePath = path.resolve(__dirname, '../Data/history.json');
 
-export default class FileStoragePageRepository implements PageRepository {
+export default class FileStoragePageRepository extends FileStorageRepository implements PageRepository {
   private pages: IPageRaw[];
-  private history: object[];
     
   constructor() {
+    super();
     this.pages = JSON.parse(fs.readFileSync(dataFilePath, 'utf-8'));
-    this.history = JSON.parse(fs.readFileSync(historyFilePath, 'utf-8'));
   }
 
-  generateId(): string {
-    return 'mockid-' + Math.random().toString(36).substring(2, 15);
-  }
-  
   getList = async (): Promise<PageListAggregate> => {
     return new PageListAggregate(
       this.pages.map((page: IPageRaw) => new PageListItem(
@@ -94,31 +91,18 @@ export default class FileStoragePageRepository implements PageRepository {
     id: string,
     title: { text: string, season: number, episode: number }[],
   }): Promise<void> => {
-    const newPageDataWithDefaults = {
+    const toUpdate = {
+      _id: body.id,
       title: body.title,
       text: [],
       properties: [],
       textSections: [],
     };
 
-    this.pages.push({ _id: body.id, ...newPageDataWithDefaults });
+    this.pages.push(toUpdate);
     this.saveToPagesFile();
 
-    const historyEntry = {
-      'id': this.generateId(),
-      'modelType': 'Page',
-      'modelId': body.id,
-      'timestamp': new Date().toISOString(),
-      'changes': [
-        {
-          'type': 'create',
-          'data': newPageDataWithDefaults,
-        }
-      ]
-    }
-
-    this.history.push(historyEntry);
-    this.saveToHistoryFile();
+    this.saveDiffInHistory('Page', body.id, {}, toUpdate);
   }
 
   update = async (id: string, body: IPageRaw): Promise<void> => {
@@ -127,26 +111,13 @@ export default class FileStoragePageRepository implements PageRepository {
       throw new DocumentNotFoundError('Page');
     }
 
-    this.pages[pageIndex] = { ...this.pages[pageIndex], ...body };
+    const oldData = this.pages[pageIndex];
+    const newData = { ...oldData, ...body };
+
+    this.pages[pageIndex] = newData;
     this.saveToPagesFile();
 
-    const { _id, ...otherUpdatedData } = body;
-
-    const historyEntry = {
-      'id': this.generateId(),
-      'modelType': 'Page',
-      'modelId': id,
-      'timestamp': new Date().toISOString(),
-      'changes': [
-        {
-          'type': 'update',
-          'data': otherUpdatedData,
-        }
-      ]
-    }
-
-    this.history.push(historyEntry);
-    this.saveToHistoryFile();
+    this.saveDiffInHistory('Page', id, oldData, newData);
   }
 
   delete = async (id: string): Promise<void> => {
@@ -157,13 +128,11 @@ export default class FileStoragePageRepository implements PageRepository {
 
     this.pages.splice(pageIndex, 1);
     this.saveToPagesFile();
+
+    this.saveDeleteInHistory('Page', id);
   }
 
   private saveToPagesFile = (): void => {
     fs.writeFileSync(dataFilePath, JSON.stringify(this.pages, null, 2), 'utf-8');
-  }
-  
-  private saveToHistoryFile = (): void => {
-    fs.writeFileSync(historyFilePath, JSON.stringify(this.history, null, 2), 'utf-8');
   }
 }
