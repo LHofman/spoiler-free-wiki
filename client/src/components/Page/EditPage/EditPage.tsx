@@ -26,7 +26,6 @@ function EditPage(props: EditPageProps) {
         const response = await axios.get<Page>(
           `http://localhost:3000/api/pages/raw/${props.pageId}`
         );
-        console.log('Fetched page:', response.data);
         setPage(response.data);
       } catch (error) {
         console.error('Error fetching page:', error);
@@ -65,12 +64,10 @@ function EditPage(props: EditPageProps) {
 
   const updatePage = async (updatedPage: Page): Promise<void> => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:3000/api/pages/${updatedPage._id}`,
         updatedPage
       );
-      console.log('Updated Page:', response.data);
-
       setPage(updatedPage);
     } catch (error) {
       console.error('Error fetching page:', error);

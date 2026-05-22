@@ -22,7 +22,6 @@ function NavBar() {
     const fetchPage = async () => {
       try {
         const response = await axios.get<MenuType>(`http://localhost:3000/api/menus/navbar/${progress.season}/${progress.episode}`);
-        console.log("Fetched menu:", response.data);
         setMenu(response.data);
       } catch (error) {
         console.error("Error fetching menu:", error);

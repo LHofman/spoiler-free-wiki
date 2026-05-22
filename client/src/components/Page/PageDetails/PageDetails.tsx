@@ -22,7 +22,6 @@ function PageDetailsComponent(props: PageDetailsProps) {
         const response = await axios.get<PageDetails>(
           `http://localhost:3000/api/pages/${props.pageId}/${progress.season}/${progress.episode}`
         );
-        console.log("Fetched page:", response.data);
         setPage(response.data);
       } catch (error) {
         console.error("Error fetching page:", error);

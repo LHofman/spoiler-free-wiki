@@ -16,6 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 const uri: string = process.env.MONGODB_URI || '';
 
 (async () => {
+  if (process.env.USE_MOCK_DATA) {
+    console.log('Using mock data, skipping database connection');
+    return;
+  }
+  
   try {
     await mongoose.connect(uri);
     console.log('Connected to the database');

@@ -1,0 +1,218 @@
+[
+  {
+    "_id": "mockpageidhannibal",
+    "title": [
+      {
+        "text": "Hannibal Lector",
+        "season": 0,
+        "episode": 0
+      }
+    ],
+    "text": [
+      [
+        {
+          "text": "Dr. Hannibal Lecter is one of the two main protagonists (alongside [[mockpageidwill|Will Graham]]) of the NBC show Hannibal.",
+          "season": 0,
+          "episode": 0
+        }
+      ],
+      [
+        {
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes.",
+          "season": 0,
+          "episode": 0
+        },
+        {
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives.",
+          "season": 1,
+          "episode": 3
+        },
+        {
+          "text": "Hannibal is a psychiatrist who works with Special Agent [[mockpageidwill|Will Graham]] to track down serial killers. Unknown to his colleagues, Hannibal is a cannibalistic serial killer known as the Chesapeake Ripper, who works behind Graham's back to further his own crimes. However, he sometimes uses them for other purposes such as committing two murders as a 'copycat' of the crimes of Garret Jacob Hobbs to present Graham with a clearer picture of the true killer's motives.",
+          "season": 2,
+          "episode": 5
+        }
+      ]
+    ],
+    "properties": [
+      {
+        "property": "Name",
+        "value": [
+          {
+            "text": "Hannibal Lector",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "property": "Age",
+        "value": [
+          {
+            "text": "44",
+            "season": 0,
+            "episode": 0
+          },
+          {
+            "text": "45",
+            "season": 2,
+            "episode": 0
+          },
+          {
+            "season": 3,
+            "episode": 0,
+            "text": "46"
+          }
+        ]
+      }
+    ],
+    "textSections": [
+      {
+        "title": [
+          {
+            "text": "History",
+            "season": 0,
+            "episode": 0
+          }
+        ],
+        "text": [
+          [
+            {
+              "text": "Hannibal Lecter was born in Lithuania to Count Lecter, an aristocrat and Simonetta Sforza-Lecter.",
+              "season": 0,
+              "episode": 0
+            }
+          ],
+          [
+            {
+              "text": "At the age of 16, he was adopted by his uncle Robertus and his aunt, Lady Murasaki.",
+              "season": 0,
+              "episode": 0
+            }
+          ]
+        ]
+      },
+      {
+        "title": [
+          {
+            "text": "Biography",
+            "season": 0,
+            "episode": 0
+          }
+        ],
+        "text": [
+          [
+            {
+              "text": "Hannibal took a keen interest in Graham, whom he sensed to be similar minded.",
+              "season": 0,
+              "episode": 0
+            }
+          ],
+          [
+            {
+              "text": "Despite his homicidal nature, he appears to have a certain empathy for others on some occasions.",
+              "season": 0,
+              "episode": 0
+            }
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "_id": "mockpageidwill",
+    "title": [
+      {
+        "text": "Will Graham",
+        "season": 0,
+        "episode": 0
+      }
+    ],
+    "text": [
+      [
+        {
+          "text": "Will Graham is one of the two main protagonists (alongside [[mockpageidhannibal|Hannibal Lecter]]) of NBC's Hannibal.",
+          "season": 0,
+          "episode": 0
+        }
+      ],
+      [
+        {
+          "text": "Will is a criminal profiler and hunter of serial killers, who has a unique ability he uses to identify and understand the killers he tracks.",
+          "season": 0,
+          "episode": 0
+        }
+      ]
+    ],
+    "properties": [
+      {
+        "property": "Name",
+        "value": [
+          {
+            "text": "Will Graham",
+            "season": 0,
+            "episode": 0
+          }
+        ]
+      },
+      {
+        "property": "Age",
+        "value": [
+          {
+            "text": "38",
+            "season": 0,
+            "episode": 0
+          },
+          {
+            "text": "39",
+            "season": 2,
+            "episode": 0
+          },
+          {
+            "text": "40",
+            "season": 3,
+            "episode": 0
+          }
+        ]
+      }
+    ],
+    "textSections": [
+      {
+        "title": [
+          {
+            "text": "Background",
+            "season": 0,
+            "episode": 0
+          }
+        ],
+        "text": [
+          [
+            {
+              "text": "Will is a former homicide detective who lost his job due to not being able to use his gun when necessary.",
+              "season": 0,
+              "episode": 0
+            }
+          ]
+        ]
+      },
+      {
+        "title": [
+          {
+            "text": "Personality",
+            "season": 0,
+            "episode": 0
+          }
+        ],
+        "text": [
+          [
+            {
+              "text": "Will is a deeply complex man. He describes himself as being on the autism spectrum, due to his social difficulties and lack of eye contact; however, it is contrasted by his sociopathic tendencies and his enjoyment of killing, which makes this statement questionable.",
+              "season": 0,
+              "episode": 0
+            }
+          ]
+        ]
+      }
+    ]
+  }
+]

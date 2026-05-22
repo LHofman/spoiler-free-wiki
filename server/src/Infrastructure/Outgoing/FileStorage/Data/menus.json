@@ -1,0 +1,23 @@
+[
+  {
+    "_id": "mockid",
+    "name": "navbar",
+    "items": [{
+      "type": "subMenu",
+      "name": "Characters",
+      "pageId": "mocksubmenuid",
+      "items": [
+        {
+          "type": "page",
+          "name": "Hannibal Lector",
+          "pageId": "mockpageidhannibal"
+        },
+        {
+          "type": "page",
+          "name": "Will Graham",
+          "pageId": "mockpageidwill"
+        }
+      ]
+    }]
+  }
+]

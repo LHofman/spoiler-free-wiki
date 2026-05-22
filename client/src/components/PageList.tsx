@@ -27,7 +27,6 @@ function PageList() {
     const fetchPage = async () => {
       try {
         const response = await axios.get<PageList>(`http://localhost:3000/api/pages/list/${progress.season}/${progress.episode}`);
-        console.log("Fetched page list:", response.data);
         setPageList(response.data);
       } catch (error) {
         console.error("Error fetching page list:", error);
@@ -43,8 +42,6 @@ function PageList() {
   const handleAddPage = async (values: TextItem) => {
     try {
       const response = await axios.post('http://localhost:3000/api/pages', values);
-      console.log('Added Page:', response.data);
-
       setPageList([...(pageList ?? []), response.data]);
     } catch (error) {
       console.error('Error fetching page:', error);
@@ -60,9 +57,7 @@ function PageList() {
 
   const submitDelete = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/pages/${currentPageId}`);
-      console.log('Deleted Page:', response.data);
-
+      await axios.delete(`http://localhost:3000/api/pages/${currentPageId}`);
       setPageList((pageList ?? []).filter((page) => page.id !== currentPageId));
     } catch (error) {
       console.error('Error deleting page:', error);

@@ -1,7 +1,7 @@
-import MenuAggregate from '../../../Domain/Aggregate/MenuAggregate';
-import MenuRepository from '../../../Domain/Repository/MenuRepository';
-import PageRepository from '../../../Domain/Repository/PageRepository';
-import MenuItem from '../../../Domain/ValueObject/MenuItem';
+import MenuAggregate from '../../../../Domain/Aggregate/MenuAggregate';
+import MenuRepository from '../../../../Domain/Repository/MenuRepository';
+import PageRepository from '../../../../Domain/Repository/PageRepository';
+import MenuItem from '../../../../Domain/ValueObject/MenuItem';
 import Menu, { IMenuDoc, IMenuItem } from '../Model/Menu';
 import MongooseRepository from './MongooseRepository';
 

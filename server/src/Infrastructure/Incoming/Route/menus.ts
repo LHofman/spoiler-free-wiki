@@ -1,15 +1,12 @@
 import express, { Request, Response } from 'express';
-import MenuRepository from '../../../Domain/Repository/MenuRepository';
-import MongooseMenuRepository from '../../Outgoing/Repository/MongooseMenuRepository';
-import PageRepository from '../../../Domain/Repository/PageRepository';
-import MongoosePageRepository from '../../Outgoing/Repository/MongoosePageRepository';
+import MenuRepository, { getMenuRepository } from '../../../Domain/Repository/MenuRepository';
 
 const router = express.Router();
 
+const menuRepository: MenuRepository = getMenuRepository();
+
 router.get('/raw/:name', async (req: Request<{ name: string }>, res: Response) => {
   try {
-    const pageRepository: PageRepository = new MongoosePageRepository();
-    const menuRepository: MenuRepository = new MongooseMenuRepository(pageRepository);
     const menuRaw = await menuRepository.findRawByName(req.params.name);
     res.json(menuRaw);
   } catch (error) {
@@ -26,9 +23,6 @@ interface GetByNameparams extends ProgressParams {
 }
 router.get('/:name{/:season}{/:episode}', async (req: Request<GetByNameparams>, res: Response) => {
   try {
-    const pageRepository: PageRepository = new MongoosePageRepository();
-    const menuRepository: MenuRepository = new MongooseMenuRepository(pageRepository);
-    
     const { season, episode } = req.params;
     const menuAggregate = await menuRepository.getMenuByName(
       req.params.name,
@@ -44,8 +38,6 @@ router.get('/:name{/:season}{/:episode}', async (req: Request<GetByNameparams>, 
 
 router.put('/:id', async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const pageRepository: PageRepository = new MongoosePageRepository();
-    const menuRepository: MenuRepository = new MongooseMenuRepository(pageRepository);
     await menuRepository.update(req.params.id, req.body);
     res.json({ success: true });
   } catch (error) {

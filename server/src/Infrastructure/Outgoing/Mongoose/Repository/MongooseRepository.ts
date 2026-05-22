@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import InvalidIdError from '../../../Domain/Error/InvalidIdError';
+import InvalidIdError from '../../../../Domain/Error/InvalidIdError';
 
 export default abstract class MongooseRepository<M extends Document> {
   protected toObjectId(id: string): mongoose.Types.ObjectId {

@@ -54,8 +54,8 @@ function TextItemForm(props: TextItemProps) {
     }
 
     try {
-      const response = await axios.get<PageList>(`http://localhost:3000/api/pages/${progress.season}/${progress.episode}`);
-      
+      const response = await axios.get<PageList>(`http://localhost:3000/api/pages/list/${progress.season}/${progress.episode}`);
+
       const pages = response.data.map((page) => ({ value: page.id, label: page.title }));
       setAllPages(pages);
 

@@ -1,18 +1,22 @@
 import mongoose from 'mongoose';
-import PageAggregate from '../../../Domain/Aggregate/PageAggregate';
-import DocumentNotFoundError from '../../../Domain/Error/DocumentNotFoundError';
-import PageRepository from '../../../Domain/Repository/PageRepository';
-import PageProperty from '../../../Domain/ValueObject/PageProperty';
-import TextItem from '../../../Domain/ValueObject/TextItem';
-import TextItemVersions from '../../../Domain/ValueObject/TextItemVersions';
-import TextSection from '../../../Domain/ValueObject/TextSection';
+import PageAggregate from '../../../../Domain/Aggregate/PageAggregate';
+import DocumentNotFoundError from '../../../../Domain/Error/DocumentNotFoundError';
+import PageRepository from '../../../../Domain/Repository/PageRepository';
+import PageProperty from '../../../../Domain/ValueObject/PageProperty';
+import TextItem from '../../../../Domain/ValueObject/TextItem';
+import TextItemVersions from '../../../../Domain/ValueObject/TextItemVersions';
+import TextSection from '../../../../Domain/ValueObject/TextSection';
 import Page, { IPageDoc } from '../Model/Page';
 import { ITextItemSchemaDoc } from '../Model/TextItemSchema';
 import MongooseRepository from './MongooseRepository';
-import PageListAggregate from '../../../Domain/Aggregate/PageListAggregate';
-import PageListItem from '../../../Domain/ValueObject/PageListItem';
+import PageListAggregate from '../../../../Domain/Aggregate/PageListAggregate';
+import PageListItem from '../../../../Domain/ValueObject/PageListItem';
 
 export default class MongoosePageRepository extends MongooseRepository<IPageDoc> implements PageRepository {
+  generateId(): string {
+    return new mongoose.Types.ObjectId().toString();
+  }
+
   getList = async (): Promise<PageListAggregate> => {
     const pages = await Page.find();
 
@@ -81,17 +85,18 @@ export default class MongoosePageRepository extends MongooseRepository<IPageDoc>
   }
 
   add = async (body: {
-    _id: mongoose.Types.ObjectId,
+    id: string,
     title: { text: string, season: number, episode: number }[],
   }): Promise<void> => {
-    await Page.insertOne(body);
+    const { id, title } = body;
+    await Page.insertOne({ _id: this.toObjectId(id), title });
   }
 
   update = async (id: string, body: IPageDoc): Promise<void> => {
-    await Page.findByIdAndUpdate(id, body);
+    await Page.findByIdAndUpdate(this.toObjectId(id), body);
   }
 
   delete = async (id: string): Promise<void> => {
-    await Page.findByIdAndDelete(id);
+    await Page.findByIdAndDelete(this.toObjectId(id));
   }
 }

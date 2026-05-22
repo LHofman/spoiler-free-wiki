@@ -9,11 +9,26 @@ export default class MenuItem {
   ) {}
   
   public toDTO(): MenuItemDTO {
+    if (this.type === 'page') {
+      if (!this.pageId) {
+        throw new Error('Page menu item must have a pageId');
+      }
+
+      return {
+        type: this.type,
+        name: this.name,
+        pageId: this.pageId,
+      };
+    }
+
+    if (!this.items) {
+      throw new Error('SubMenu menu item must have items');
+    }
+
     return {
       type: this.type,
       name: this.name,
-      pageId: this.pageId,
-      items: this.items ? this.items.map(item => item.toDTO()) : undefined,
+      items: this.items.map(item => item.toDTO()),
     };
   }
 }
